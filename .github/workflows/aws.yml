@@ -38,7 +38,7 @@ jobs:
           aws-region: "us-east-1"
 
       - name: Sync build to S3 bucket
-        run: aws s3 sync ./dist s3://psicosafe-landing-web
+        run: aws s3 sync ./dist s3://psicosafe-web
 
       - name: Create CloudFront invalidation
         run: aws cloudfront create-invalidation --distribution-id ESPZLBCUTX6DW --paths "/*"
