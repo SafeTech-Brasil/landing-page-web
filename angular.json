@@ -3,7 +3,7 @@
   "version": 1,
   "newProjectRoot": "projects",
   "projects": {
-    "ladingPage-PsicoSafe": {
+    "web-landing-page": {
       "projectType": "application",
       "schematics": {},
       "root": "",
@@ -56,10 +56,10 @@
           "builder": "@angular/build:dev-server",
           "configurations": {
             "production": {
-              "buildTarget": "ladingPage-PsicoSafe:build:production"
+              "buildTarget": "web-landing-page:build:production"
             },
             "development": {
-              "buildTarget": "ladingPage-PsicoSafe:build:development"
+              "buildTarget": "web-landing-page:build:development"
             }
           },
           "defaultConfiguration": "development"
