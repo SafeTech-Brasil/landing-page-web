@@ -4,10 +4,10 @@ import { LucideAngularModule, ShieldCheck, Users, Award, BadgeCheck } from 'luci
 import { ThemeService } from '../../../services/theme.service';
 
 @Component({
-  selector: 'app-social-proof',
-  changeDetection: ChangeDetectionStrategy.OnPush,
-  imports: [CommonModule, LucideAngularModule],
-  template: `
+    selector: 'app-social-proof',
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    imports: [CommonModule, LucideAngularModule],
+    template: `
     <section class="py-16 md:py-20 bg-pattern relative overflow-hidden" aria-labelledby="guarantees-heading">
       <!-- Decorative elements -->
       <div class="absolute top-10 left-10 w-64 h-64 bg-primary/5 rounded-full blur-3xl" aria-hidden="true"></div>
@@ -45,7 +45,7 @@ import { ThemeService } from '../../../services/theme.service';
               </div>
               <h3 class="font-bold text-xl mb-3">Conformidade 100% Garantida</h3>
               <p class="text-sm text-muted-foreground leading-relaxed">
-                Questionários validados por especialistas e em total conformidade com todas as normas regulamentadoras vigentes. Proteção jurídica completa.
+                Questionários validados por especialistas e alinhados às NR 1 e NR 17. Conformidade completa com as normas regulamentadoras vigentes.
               </p>
             </div>
           </div>
@@ -124,9 +124,9 @@ import { ThemeService } from '../../../services/theme.service';
   `
 })
 export class SocialProofComponent {
-  readonly themeService = inject(ThemeService);
-  readonly ShieldCheck = ShieldCheck;
-  readonly Users = Users;
-  readonly Award = Award;
-  readonly BadgeCheck = BadgeCheck;
+    readonly themeService = inject(ThemeService);
+    readonly ShieldCheck = ShieldCheck;
+    readonly Users = Users;
+    readonly Award = Award;
+    readonly BadgeCheck = BadgeCheck;
 }

@@ -64,7 +64,7 @@ export class FaqComponent {
   readonly faqItems = signal<FaqItem[]>([
     {
       question: 'Como funciona a avaliação gratuita?',
-      answer: 'A avaliação gratuita permite que você teste todas as funcionalidades da plataforma por um período determinado. Você pode criar questionários, enviar para colaboradores, visualizar relatórios e explorar todos os recursos sem compromisso financeiro.',
+      answer: 'A avaliação gratuita permite que você teste as funcionalidades do questionário e conheça na prática como a solução funciona, de forma simples e sem compromisso.',
       isOpen: false
     },
     {

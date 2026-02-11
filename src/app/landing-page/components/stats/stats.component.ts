@@ -3,10 +3,10 @@ import { CommonModule } from '@angular/common';
 import { LucideAngularModule, TrendingDown, DollarSign, Clock, BarChart3 } from 'lucide-angular';
 
 @Component({
-  selector: 'app-stats',
-  changeDetection: ChangeDetectionStrategy.OnPush,
-  imports: [CommonModule, LucideAngularModule],
-  template: `
+    selector: 'app-stats',
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    imports: [CommonModule, LucideAngularModule],
+    template: `
     <section id="recursos" class="py-16 md:py-20 bg-gradient-soft relative overflow-hidden" aria-labelledby="benefits-heading">
       <!-- Decorative background elements -->
       <div class="absolute top-0 right-0 w-96 h-96 bg-secondary/5 rounded-full blur-3xl" aria-hidden="true"></div>
@@ -36,7 +36,7 @@ import { LucideAngularModule, TrendingDown, DollarSign, Clock, BarChart3 } from 
               <div class="text-3xl font-bold text-primary mb-2">-90%</div>
               <h3 class="text-xl font-bold mb-3">Redução de Multas</h3>
               <p class="text-sm text-muted-foreground leading-relaxed">
-                Evite penalidades e autuações com conformidade total às normas regulamentadoras
+                Evite penalidades e autuações com conformidade às NR 1 e NR 17. Mais segurança jurídica e menos riscos de multas para sua empresa.
               </p>
             </div>
           </div>
@@ -91,8 +91,8 @@ import { LucideAngularModule, TrendingDown, DollarSign, Clock, BarChart3 } from 
   `
 })
 export class StatsComponent {
-  readonly TrendingDown = TrendingDown;
-  readonly DollarSign = DollarSign;
-  readonly Clock = Clock;
-  readonly BarChart3 = BarChart3;
+    readonly TrendingDown = TrendingDown;
+    readonly DollarSign = DollarSign;
+    readonly Clock = Clock;
+    readonly BarChart3 = BarChart3;
 }
