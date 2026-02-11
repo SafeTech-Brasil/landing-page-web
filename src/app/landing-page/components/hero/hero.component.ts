@@ -27,7 +27,7 @@ import { LucideAngularModule, ArrowRight } from 'lucide-angular';
           
           <!-- Subtitle with responsive sizing -->
           <p class="text-base sm:text-lg md:text-xl lg:text-2xl text-white/90 mb-8 sm:mb-10 max-w-3xl mx-auto leading-relaxed px-4 sm:px-0">
-            A plataforma completa para questionários psicossociais e conformidade com normas regulamentadoras
+            A plataforma completa para questionários psicossociais e conformidade com a NR 1 e NR 17.
           </p>
           
           <!-- CTA buttons - stacked on mobile, side by side on desktop -->
