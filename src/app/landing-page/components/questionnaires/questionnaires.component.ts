@@ -22,7 +22,7 @@ import { NgOptimizedImage } from '@angular/common';
             <ul class="space-y-4">
               <li class="flex items-start gap-3">
                 <lucide-icon [img]="CheckCircle2" class="h-6 w-6 text-secondary flex-shrink-0 mt-0.5" />
-                <span class="text-foreground">Questionários validados por especialistas - COPSOQ III</span>
+                <span class="text-foreground">Questionários validados por especialistas - COPSOQ II</span>
               </li>
               <li class="flex items-start gap-3">
                 <lucide-icon [img]="CheckCircle2" class="h-6 w-6 text-secondary flex-shrink-0 mt-0.5" />
