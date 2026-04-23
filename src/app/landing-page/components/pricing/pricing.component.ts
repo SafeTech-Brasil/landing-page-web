@@ -93,9 +93,8 @@ interface PricingTier {
                 <div class="grid sm:grid-cols-2 gap-4">
                   <!-- Card Mensal -->
                   <div class="rounded-xl border-2 border-primary bg-primary/5 p-6">
-                    <p class="text-xs font-semibold text-primary uppercase tracking-wider mb-1">
-                      Plano Mensal — {{ currentTier().name }}
-                    </p>
+                    <p class="text-xs font-semibold text-muted-foreground uppercase tracking-wider">Plano Mensal</p>
+                    <p class="text-lg font-bold text-secondary mb-1">{{ currentTier().name }}</p>
                     <p class="text-3xl font-bold text-foreground mb-1">
                       {{ formatBRL(monthlyPrice()) }}
                       <span class="text-sm font-normal text-muted-foreground">/mês</span>
