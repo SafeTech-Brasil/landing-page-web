@@ -11,7 +11,7 @@ import { ThemeService } from '../../../services/theme.service';
     <section class="py-16 md:py-20 bg-pattern relative overflow-hidden" aria-labelledby="guarantees-heading">
       <!-- Decorative elements -->
       <div class="absolute top-10 left-10 w-64 h-64 bg-primary/5 rounded-full blur-3xl" aria-hidden="true"></div>
-      <div class="absolute bottom-10 right-10 w-80 h-80 bg-secondary/5 rounded-full blur-3xl" aria-hidden="true"></div>
+      <div class="absolute bottom-10 right-10 w-80 h-80 bg-accent/5 rounded-full blur-3xl" aria-hidden="true"></div>
       
       <div class="container mx-auto px-4 relative z-10">
         <div class="text-center mb-12 md:mb-16">
@@ -28,18 +28,18 @@ import { ThemeService } from '../../../services/theme.service';
 
         <div class="grid md:grid-cols-2 lg:grid-cols-4 gap-6 md:gap-8 max-w-6xl mx-auto">
           <!-- Guarantee 1 -->
-          <div class="bg-card p-6 md:p-8 rounded-xl border-2 border-primary/30 shadow-lg card-hover relative overflow-hidden group">
+          <div class="bg-card p-6 md:p-8 rounded-xl border-2 border-accent/30 shadow-lg card-hover relative overflow-hidden group">
             <div class="absolute top-2 right-2">
-              <div class="w-3 h-3 bg-secondary rounded-full animate-pulse" aria-hidden="true"></div>
+              <div class="w-3 h-3 bg-accent rounded-full animate-pulse" aria-hidden="true"></div>
             </div>
             <div class="flex flex-col items-center text-center">
               <div class="relative mb-6">
-                <div class="absolute inset-0 bg-primary/20 rounded-2xl blur-xl group-hover:blur-2xl transition-all" aria-hidden="true"></div>
-                <div class="relative w-16 h-16 rounded-2xl bg-gradient-to-br from-primary to-primary/80 flex items-center justify-center shadow-lg group-hover:scale-110 transition-transform">
+                <div class="absolute inset-0 bg-accent/20 rounded-2xl blur-xl group-hover:blur-2xl transition-all" aria-hidden="true"></div>
+                <div class="relative w-16 h-16 rounded-2xl bg-gradient-to-br from-primary to-accent flex items-center justify-center shadow-lg group-hover:scale-110 transition-transform">
                   <lucide-icon [img]="ShieldCheck" class="h-8 w-8 text-white" aria-hidden="true" />
                 </div>
               </div>
-              <div class="inline-flex items-center gap-2 px-3 py-1 bg-primary/10 text-xs font-bold rounded-full mb-3" [style.color]="themeService.theme() === 'dark' ? '#60a5fa' : '#1e3a5f'">
+              <div class="inline-flex items-center gap-2 px-3 py-1 bg-accent/10 text-xs font-bold rounded-full mb-3" [style.color]="themeService.theme() === 'dark' ? '#38bdf8' : '#0ea5e9'">
                 <lucide-icon [img]="BadgeCheck" class="h-4 w-4" aria-hidden="true" />
                 VALIDADO
               </div>
@@ -51,18 +51,18 @@ import { ThemeService } from '../../../services/theme.service';
           </div>
 
           <!-- Guarantee 2 -->
-          <div class="bg-card p-6 md:p-8 rounded-xl border-2 border-secondary/30 shadow-lg card-hover relative overflow-hidden group">
+          <div class="bg-card p-6 md:p-8 rounded-xl border-2 border-accent/30 shadow-lg card-hover relative overflow-hidden group">
             <div class="absolute top-2 right-2">
-              <div class="w-3 h-3 bg-secondary rounded-full animate-pulse" aria-hidden="true"></div>
+              <div class="w-3 h-3 bg-accent rounded-full animate-pulse" aria-hidden="true"></div>
             </div>
             <div class="flex flex-col items-center text-center">
               <div class="relative mb-6">
-                <div class="absolute inset-0 bg-secondary/20 rounded-2xl blur-xl group-hover:blur-2xl transition-all" aria-hidden="true"></div>
-                <div class="relative w-16 h-16 rounded-2xl bg-gradient-to-br from-secondary to-secondary/80 flex items-center justify-center shadow-lg group-hover:scale-110 transition-transform">
+                <div class="absolute inset-0 bg-accent/20 rounded-2xl blur-xl group-hover:blur-2xl transition-all" aria-hidden="true"></div>
+                <div class="relative w-16 h-16 rounded-2xl bg-gradient-to-br from-primary to-accent flex items-center justify-center shadow-lg group-hover:scale-110 transition-transform">
                   <lucide-icon [img]="Users" class="h-8 w-8 text-white" aria-hidden="true" />
                 </div>
               </div>
-              <div class="inline-flex items-center gap-2 px-3 py-1 bg-secondary/10 text-xs font-bold rounded-full mb-3" [style.color]="themeService.theme() === 'dark' ? '#34d399' : '#10b981'">
+              <div class="inline-flex items-center gap-2 px-3 py-1 bg-accent/10 text-xs font-bold rounded-full mb-3" [style.color]="themeService.theme() === 'dark' ? '#38bdf8' : '#0ea5e9'">
                 <lucide-icon [img]="BadgeCheck" class="h-4 w-4" aria-hidden="true" />
                 24/7
               </div>
@@ -81,7 +81,7 @@ import { ThemeService } from '../../../services/theme.service';
             <div class="flex flex-col items-center text-center">
               <div class="relative mb-6">
                 <div class="absolute inset-0 bg-accent/20 rounded-2xl blur-xl group-hover:blur-2xl transition-all" aria-hidden="true"></div>
-                <div class="relative w-16 h-16 rounded-2xl bg-gradient-to-br from-accent to-accent/80 flex items-center justify-center shadow-lg group-hover:scale-110 transition-transform">
+                <div class="relative w-16 h-16 rounded-2xl bg-gradient-to-br from-primary to-accent flex items-center justify-center shadow-lg group-hover:scale-110 transition-transform">
                   <lucide-icon [img]="Award" class="h-8 w-8 text-white" aria-hidden="true" />
                 </div>
               </div>
@@ -97,18 +97,18 @@ import { ThemeService } from '../../../services/theme.service';
           </div>
 
           <!-- Guarantee 4 -->
-          <div class="bg-card p-6 md:p-8 rounded-xl border-2 border-primary/30 shadow-lg card-hover relative overflow-hidden group">
+          <div class="bg-card p-6 md:p-8 rounded-xl border-2 border-accent/30 shadow-lg card-hover relative overflow-hidden group">
             <div class="absolute top-2 right-2">
-              <div class="w-3 h-3 bg-secondary rounded-full animate-pulse" aria-hidden="true"></div>
+              <div class="w-3 h-3 bg-accent rounded-full animate-pulse" aria-hidden="true"></div>
             </div>
             <div class="flex flex-col items-center text-center">
               <div class="relative mb-6">
-                <div class="absolute inset-0 bg-primary/20 rounded-2xl blur-xl group-hover:blur-2xl transition-all" aria-hidden="true"></div>
-                <div class="relative w-16 h-16 rounded-2xl bg-gradient-to-br from-primary to-primary/80 flex items-center justify-center shadow-lg group-hover:scale-110 transition-transform">
+                <div class="absolute inset-0 bg-accent/20 rounded-2xl blur-xl group-hover:blur-2xl transition-all" aria-hidden="true"></div>
+                <div class="relative w-16 h-16 rounded-2xl bg-gradient-to-br from-primary to-accent flex items-center justify-center shadow-lg group-hover:scale-110 transition-transform">
                   <lucide-icon [img]="ShieldCheck" class="h-8 w-8 text-white" aria-hidden="true" />
                 </div>
               </div>
-              <div class="inline-flex items-center gap-2 px-3 py-1 bg-secondary/10 text-xs font-bold rounded-full mb-3" [style.color]="themeService.theme() === 'dark' ? '#34d399' : '#10b981'">
+              <div class="inline-flex items-center gap-2 px-3 py-1 bg-accent/10 text-xs font-bold rounded-full mb-3" [style.color]="themeService.theme() === 'dark' ? '#38bdf8' : '#0ea5e9'">
                 <lucide-icon [img]="BadgeCheck" class="h-4 w-4" aria-hidden="true" />
                 SEM RISCO
               </div>
