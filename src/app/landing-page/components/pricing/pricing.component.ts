@@ -141,10 +141,10 @@ interface PricingTier {
             <!-- Estado: > 1000 (Corporate) -->
             @if (isCorporate()) {
               <div class="text-center space-y-4">
-                <div class="rounded-xl border-2 border-primary bg-primary/5 p-6">
+                <div class="rounded-xl border-2 border-secondary bg-secondary/5 p-6">
                   <div class="flex items-center justify-center gap-2 mb-2">
-                    <lucide-icon [img]="Building2" class="h-6 w-6 text-primary" />
-                    <p class="text-lg font-bold text-primary">Plano Corporate</p>
+                    <lucide-icon [img]="Building2" class="h-6 w-6 text-secondary" />
+                    <p class="text-lg font-bold text-foreground">Plano Corporate</p>
                   </div>
                   <p class="text-muted-foreground text-sm">
                     Para mais de 1.000 colaboradores, oferecemos condições especiais com atendimento personalizado.
