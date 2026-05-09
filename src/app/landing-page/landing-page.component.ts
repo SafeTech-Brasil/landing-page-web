@@ -8,6 +8,7 @@ import { SocialProofComponent } from './components/social-proof/social-proof.com
 import { CtaComponent } from './components/cta/cta.component';
 import { FooterComponent } from './components/footer/footer.component';
 import { FaqComponent } from './components/faq/faq.component';
+import { PropostaModalComponent } from './components/proposta-modal/proposta-modal.component';
 
 @Component({
   selector: 'app-landing-page',
@@ -21,7 +22,8 @@ import { FaqComponent } from './components/faq/faq.component';
     SocialProofComponent,
     FaqComponent,
     CtaComponent,
-    FooterComponent
+    FooterComponent,
+    PropostaModalComponent
   ],
   template: `
     <a href="#inicio" class="skip-to-main">Pular para conteúdo principal</a>
@@ -38,6 +40,7 @@ import { FaqComponent } from './components/faq/faq.component';
       </main>
       <app-footer />
     </div>
+    <app-proposta-modal />
   `
 })
 export class LandingPageComponent { }

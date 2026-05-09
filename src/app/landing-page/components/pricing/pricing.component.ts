@@ -1,6 +1,7 @@
-import { Component, ChangeDetectionStrategy, signal, computed } from '@angular/core';
+import { Component, ChangeDetectionStrategy, signal, computed, inject } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { LucideAngularModule, Calculator, Users, ArrowRight, Building2, MessageCircle } from 'lucide-angular';
+import { PropostaModalService } from '../../../services/proposta-modal.service';
 
 interface PricingTier {
   name: string;
@@ -124,17 +125,26 @@ interface PricingTier {
                 </div>
               </div>
 
-              <!-- CTA Button -->
-              <div class="text-center">
-                <a
-                  href="https://safetechpsicossocial.com.br"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  class="btn-secondary inline-flex items-center gap-2 px-8 min-h-[44px] sm:min-h-[48px]"
+              <!-- CTA Buttons -->
+              <div class="flex flex-col sm:flex-row gap-3 justify-center">
+                <button
+                  type="button"
+                  (click)="abrirProposta('MENSAL')"
+                  class="btn-secondary inline-flex items-center justify-center gap-2 px-6 min-h-[44px] sm:min-h-[48px]"
                 >
-                  Contratar Agora
+                  Contratar Mensal
                   <lucide-icon [img]="ArrowRight" class="h-5 w-5" />
-                </a>
+                </button>
+                @if (collaborators() >= 10) {
+                  <button
+                    type="button"
+                    (click)="abrirProposta('PONTUAL')"
+                    class="btn-outline inline-flex items-center justify-center gap-2 px-6 min-h-[44px] sm:min-h-[48px] rounded-full border-2 border-primary text-primary font-semibold hover:bg-primary/5 transition-colors"
+                  >
+                    Contratar Avulso
+                    <lucide-icon [img]="ArrowRight" class="h-5 w-5" />
+                  </button>
+                }
               </div>
             }
 
@@ -150,15 +160,14 @@ interface PricingTier {
                     Para mais de 1.000 colaboradores, oferecemos condições especiais com atendimento personalizado.
                   </p>
                 </div>
-                <a
-                  href="https://safetechpsicossocial.com.br"
-                  target="_blank"
-                  rel="noopener noreferrer"
+                <button
+                  type="button"
+                  (click)="abrirProposta('MENSAL')"
                   class="btn-primary inline-flex items-center gap-2 px-8 min-h-[44px] sm:min-h-[48px]"
                 >
                   <lucide-icon [img]="MessageCircle" class="h-5 w-5" />
                   Fale com um Especialista
-                </a>
+                </button>
               </div>
             }
           </div>
@@ -207,6 +216,8 @@ export class PricingComponent {
   readonly Building2 = Building2;
   readonly MessageCircle = MessageCircle;
 
+  private readonly modalService = inject(PropostaModalService);
+
   private readonly tiers: PricingTier[] = [
     { name: 'Base',    min: 3,   max: 10,   base: 60,    extraRate: 0,    extraFrom: 0   },
     { name: 'Bronze',  min: 11,  max: 50,   base: 60,    extraRate: 5.50, extraFrom: 10  },
@@ -251,5 +262,21 @@ export class PricingComponent {
 
   onInputChange(value: number): void {
     this.collaborators.set(Math.max(1, Math.min(2000, Number(value) || 1)));
+  }
+
+  abrirProposta(tipo: 'MENSAL' | 'PONTUAL'): void {
+    const tier = this.isCorporate() ? 'CORPORATE' : this.currentTier().name.toUpperCase();
+    const valor = tipo === 'PONTUAL' ? this.oneTimePrice() : this.monthlyPrice();
+    const nomePlano = this.isCorporate()
+      ? 'Corporate'
+      : `${this.currentTier().name} (${tipo === 'PONTUAL' ? 'Avulso' : 'Mensal'})`;
+
+    this.modalService.open({
+      plano: tier as any,
+      tipoContratacao: tipo,
+      quantidadeColaboradores: this.collaborators(),
+      valorTotal: valor,
+      nomePlano,
+    });
   }
 }
