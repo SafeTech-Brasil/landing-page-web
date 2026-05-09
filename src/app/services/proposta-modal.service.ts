@@ -59,7 +59,7 @@ export interface PropostaStatusResponse {
   status: string;
 }
 
-const API_URL = 'http://localhost:8080';
+const API_URL = 'https://api.safetechpsicossocial.com.br';
 
 @Injectable({ providedIn: 'root' })
 export class PropostaModalService {
