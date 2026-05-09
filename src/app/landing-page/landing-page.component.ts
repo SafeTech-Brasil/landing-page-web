@@ -9,8 +9,6 @@ import { CtaComponent } from './components/cta/cta.component';
 import { FooterComponent } from './components/footer/footer.component';
 import { FaqComponent } from './components/faq/faq.component';
 import { PropostaModalComponent } from './components/proposta-modal/proposta-modal.component';
-import { PixCheckoutComponent } from './components/pix-checkout/pix-checkout.component';
-import { CartaoCheckoutComponent } from './components/cartao-checkout/cartao-checkout.component';
 
 @Component({
   selector: 'app-landing-page',
@@ -26,8 +24,6 @@ import { CartaoCheckoutComponent } from './components/cartao-checkout/cartao-che
     CtaComponent,
     FooterComponent,
     PropostaModalComponent,
-    PixCheckoutComponent,
-    CartaoCheckoutComponent,
   ],
   template: `
     <a href="#inicio" class="skip-to-main">Pular para conteúdo principal</a>
