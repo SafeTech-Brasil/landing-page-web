@@ -26,8 +26,37 @@ export interface PropostaRequest {
 export interface PropostaResponse {
   id: string;
   status: string;
-  linkPagamento: string;
   mensagem: string;
+}
+
+export interface PagamentoPIXResponse {
+  paymentId: string;
+  qrCodeBase64: string;
+  codigoCopia: string;
+  expiracao: string;
+}
+
+export interface PagamentoCartaoRequest {
+  nomeTitular: string;
+  numeroCartao: string;
+  mesValidade: string;
+  anoValidade: string;
+  ccv: string;
+  cpfTitular: string;
+  cep: string;
+  numeroEndereco: string;
+  parcelas: number;
+}
+
+export interface PagamentoCartaoResponse {
+  propostaId: string;
+  status: string;
+  mensagem: string;
+}
+
+export interface PropostaStatusResponse {
+  id: string;
+  status: string;
 }
 
 const API_URL = 'http://localhost:8080';
@@ -49,7 +78,27 @@ export class PropostaModalService {
     this.context.set(null);
   }
 
-  enviar(request: PropostaRequest): Observable<PropostaResponse> {
+  criarProposta(request: PropostaRequest): Observable<PropostaResponse> {
     return this.http.post<PropostaResponse>(`${API_URL}/api/public/propostas`, request);
+  }
+
+  iniciarPix(propostaId: string): Observable<PagamentoPIXResponse> {
+    return this.http.post<PagamentoPIXResponse>(
+      `${API_URL}/api/public/propostas/${propostaId}/pagamento/pix`,
+      {}
+    );
+  }
+
+  iniciarCartao(propostaId: string, request: PagamentoCartaoRequest): Observable<PagamentoCartaoResponse> {
+    return this.http.post<PagamentoCartaoResponse>(
+      `${API_URL}/api/public/propostas/${propostaId}/pagamento/cartao`,
+      request
+    );
+  }
+
+  consultarStatus(propostaId: string): Observable<PropostaStatusResponse> {
+    return this.http.get<PropostaStatusResponse>(
+      `${API_URL}/api/public/propostas/${propostaId}/status`
+    );
   }
 }
