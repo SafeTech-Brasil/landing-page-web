@@ -5,5 +5,9 @@ export const routes: Routes = [
     {
         path: '',
         component: LandingPageComponent
+    },
+    {
+        path: 'avaliacao',
+        loadComponent: () => import('./avaliacao-pdf/avaliacao-pdf.component').then(m => m.AvaliacaoPdfComponent)
     }
 ];

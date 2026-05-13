@@ -1,6 +1,7 @@
-import { Component, ChangeDetectionStrategy } from '@angular/core';
+import { Component, ChangeDetectionStrategy, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { LucideAngularModule, ArrowRight } from 'lucide-angular';
+import { AvaliacaoService } from '../../../services/avaliacao.service';
 
 @Component({
   selector: 'app-cta',
@@ -19,18 +20,18 @@ import { LucideAngularModule, ArrowRight } from 'lucide-angular';
         <p class="text-xl md:text-2xl mb-10 opacity-90 max-w-3xl mx-auto">
           Comece hoje mesmo com nossa avaliação gratuita e veja os resultados em poucos dias
         </p>
-        <a 
-          href="https://safetechpsicossocial.com.br" 
-          target="_blank" 
-          rel="noopener noreferrer"
+        <button
+          type="button"
+          (click)="avaliacaoService.abrirModal()"
           class="btn-secondary inline-flex items-center justify-center bg-primary-foreground text-primary hover:bg-primary-foreground/90"
         >
           Começar Agora <lucide-icon [img]="ArrowRight" class="ml-2 h-5 w-5" aria-hidden="true" />
-        </a>
+        </button>
       </div>
     </section>
   `
 })
 export class CtaComponent {
   readonly ArrowRight = ArrowRight;
+  readonly avaliacaoService = inject(AvaliacaoService);
 }

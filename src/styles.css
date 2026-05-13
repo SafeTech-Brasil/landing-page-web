@@ -476,6 +476,12 @@ html {
     font-weight: 600;
 }
 
+/* Print: page margins and body reset */
+@media print {
+  @page { size: A4 portrait; margin: 14mm 12mm; }
+  body { background: white !important; }
+}
+
 /* Reduced Motion Support */
 @media (prefers-reduced-motion: reduce) {
 

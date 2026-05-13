@@ -1,6 +1,7 @@
-import { Component, ChangeDetectionStrategy } from '@angular/core';
+import { Component, ChangeDetectionStrategy, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { LucideAngularModule, ArrowRight } from 'lucide-angular';
+import { AvaliacaoService } from '../../../services/avaliacao.service';
 
 @Component({
   selector: 'app-hero',
@@ -32,14 +33,13 @@ import { LucideAngularModule, ArrowRight } from 'lucide-angular';
           
           <!-- CTA buttons - stacked on mobile, side by side on desktop -->
           <div class="flex flex-col sm:flex-row gap-3 sm:gap-4 justify-center items-stretch sm:items-center max-w-md sm:max-w-none mx-auto px-4 sm:px-0">
-            <a 
-              href="https://safetechpsicossocial.com.br" 
-              target="_blank" 
-              rel="noopener noreferrer"
+            <button
+              type="button"
+              (click)="avaliacaoService.abrirModal()"
               class="btn-secondary inline-flex items-center justify-center w-full sm:w-auto text-base sm:text-sm md:text-base"
             >
               Quero minha Avaliação Gratuita <lucide-icon [img]="ArrowRight" class="ml-2 h-5 w-5" aria-hidden="true" />
-            </a>
+            </button>
             <a 
               href="#planos" 
               class="btn-outline-light inline-flex items-center justify-center w-full sm:w-auto text-base sm:text-sm md:text-base"
@@ -54,4 +54,5 @@ import { LucideAngularModule, ArrowRight } from 'lucide-angular';
 })
 export class HeroComponent {
   readonly ArrowRight = ArrowRight;
+  readonly avaliacaoService = inject(AvaliacaoService);
 }
