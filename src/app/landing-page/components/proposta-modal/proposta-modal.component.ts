@@ -14,6 +14,8 @@ import {
 import { PixCheckoutComponent } from '../pix-checkout/pix-checkout.component';
 import { CartaoCheckoutComponent } from '../cartao-checkout/cartao-checkout.component';
 
+const RECAPTCHA_SITE_KEY = '6Le1d-csAAAAAETMIqHADoWgtNA-2X8g2NhvIcQ4';
+
 type Step = 'dados-empresa' | 'metodo' | 'carregando-pix' | 'pix' | 'cartao' | 'sucesso' | 'erro';
 
 @Component({
@@ -123,6 +125,13 @@ type Step = 'dados-empresa' | 'metodo' | 'carregando-pix' | 'pix' | 'cartao' | '
                       Continuar para pagamento
                     }
                   </button>
+                  <p class="text-[11px] text-muted-foreground text-center leading-relaxed">
+                    Este site é protegido pelo reCAPTCHA e se aplicam a
+                    <a href="https://policies.google.com/privacy" target="_blank" rel="noopener" class="underline hover:text-foreground">Política de Privacidade</a>
+                    e os
+                    <a href="https://policies.google.com/terms" target="_blank" rel="noopener" class="underline hover:text-foreground">Termos de Serviço</a>
+                    do Google.
+                  </p>
                 </form>
               </div>
             }
@@ -447,33 +456,46 @@ export class PropostaModalComponent {
 
   enviarDadosEmpresa(f: NgForm): void {
     if (f.invalid) return;
-    this.carregandoEmpresa.set(true);
 
     const ctx = this.ctx();
     if (!ctx) return;
 
-    const request: PropostaRequest = {
-      cnpj: this.formEmpresa.cnpj.replace(/\D/g, ''),
-      razaoSocial: this.formEmpresa.razaoSocial,
-      contatoTelefone: this.formEmpresa.contatoTelefone.replace(/\D/g, ''),
-      contatoEmail: this.formEmpresa.contatoEmail,
-      plano: ctx.plano,
-      tipoContratacao: ctx.tipoContratacao,
-      quantidadeColaboradores: ctx.quantidadeColaboradores,
-    };
+    const grecaptcha = (window as any)['grecaptcha'];
+    if (!grecaptcha) {
+      this.erroMensagem.set('reCAPTCHA não disponível. Recarregue a página e tente novamente.');
+      this.step.set('erro');
+      return;
+    }
 
-    this.modalService.criarProposta(request).subscribe({
-      next: (res) => {
-        this.carregandoEmpresa.set(false);
-        this.propostaId.set(res.id);
-        this.step.set('metodo');
-      },
-      error: (err) => {
-        this.carregandoEmpresa.set(false);
-        const msg = err?.error?.message ?? 'Erro ao registrar proposta. Tente novamente.';
-        this.erroMensagem.set(msg);
-        this.step.set('erro');
-      },
+    this.carregandoEmpresa.set(true);
+
+    grecaptcha.ready(() => {
+      grecaptcha.execute(RECAPTCHA_SITE_KEY, { action: 'proposta' }).then((token: string) => {
+        const request: PropostaRequest = {
+          cnpj: this.formEmpresa.cnpj.replace(/\D/g, ''),
+          razaoSocial: this.formEmpresa.razaoSocial,
+          contatoTelefone: this.formEmpresa.contatoTelefone.replace(/\D/g, ''),
+          contatoEmail: this.formEmpresa.contatoEmail,
+          plano: ctx.plano,
+          tipoContratacao: ctx.tipoContratacao,
+          quantidadeColaboradores: ctx.quantidadeColaboradores,
+          recaptchaToken: token,
+        };
+
+        this.modalService.criarProposta(request).subscribe({
+          next: (res) => {
+            this.carregandoEmpresa.set(false);
+            this.propostaId.set(res.id);
+            this.step.set('metodo');
+          },
+          error: (err) => {
+            this.carregandoEmpresa.set(false);
+            const msg = err?.error?.message ?? 'Erro ao registrar proposta. Tente novamente.';
+            this.erroMensagem.set(msg);
+            this.step.set('erro');
+          },
+        });
+      });
     });
   }
 

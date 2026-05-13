@@ -21,6 +21,7 @@ export interface PropostaRequest {
   plano: PlanoEnum;
   tipoContratacao: TipoContratacao;
   quantidadeColaboradores: number;
+  recaptchaToken: string;
 }
 
 export interface PropostaResponse {
