@@ -3,6 +3,7 @@ import { Injectable, signal } from '@angular/core';
 export interface AvaliacaoDados {
   nome: string;
   cpf: string;
+  email: string;
   empresa: string;
 }
 

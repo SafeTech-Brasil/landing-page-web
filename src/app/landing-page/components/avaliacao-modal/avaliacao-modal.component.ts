@@ -56,6 +56,13 @@ import { AvaliacaoService } from '../../../services/avaliacao.service';
                   [class.border-destructive]="f.submitted && f.controls['cpf']?.invalid" />
               </div>
               <div>
+                <label class="block text-sm font-medium mb-1">E-mail</label>
+                <input name="email" type="email" [(ngModel)]="form.email" required email
+                  placeholder="seu@email.com.br"
+                  class="w-full h-10 rounded-md border border-input bg-background px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-ring"
+                  [class.border-destructive]="f.submitted && f.controls['email']?.invalid" />
+              </div>
+              <div>
                 <label class="block text-sm font-medium mb-1">Empresa</label>
                 <input name="empresa" type="text" [(ngModel)]="form.empresa" required
                   placeholder="Nome da empresa"
@@ -89,11 +96,11 @@ export class AvaliacaoModalComponent {
   private readonly router = inject(Router);
   readonly carregando = signal(false);
 
-  form = { nome: '', cpf: '', empresa: '' };
+  form = { nome: '', cpf: '', email: '', empresa: '' };
 
   fechar(): void {
     this.service.fecharModal();
-    this.form = { nome: '', cpf: '', empresa: '' };
+    this.form = { nome: '', cpf: '', email: '', empresa: '' };
   }
 
   onBackdropClick(event: MouseEvent): void {
@@ -113,11 +120,11 @@ export class AvaliacaoModalComponent {
   gerar(f: NgForm): void {
     if (f.invalid) return;
     this.carregando.set(true);
-    this.service.setDados({ nome: this.form.nome, cpf: this.form.cpf, empresa: this.form.empresa });
+    this.service.setDados({ nome: this.form.nome, cpf: this.form.cpf, email: this.form.email, empresa: this.form.empresa });
     this.service.fecharModal();
     this.router.navigate(['/avaliacao']).then(() => {
       this.carregando.set(false);
-      this.form = { nome: '', cpf: '', empresa: '' };
+      this.form = { nome: '', cpf: '', email: '', empresa: '' };
     });
   }
 }

@@ -229,6 +229,10 @@ const PERGUNTAS = [
               <span class="info-value">{{ dados.cpf }}</span>
             </div>
             <div class="info-row">
+              <span class="info-label">E-mail:</span>
+              <span class="info-value">{{ dados.email }}</span>
+            </div>
+            <div class="info-row">
               <span class="info-label">Setor/Cargo:</span>
               <span class="info-line"></span>
             </div>
