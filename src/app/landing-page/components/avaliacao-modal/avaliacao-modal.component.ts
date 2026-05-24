@@ -1,11 +1,8 @@
-import { Component, ChangeDetectionStrategy, inject, signal, isDevMode } from '@angular/core';
+import { Component, ChangeDetectionStrategy, inject, signal } from '@angular/core';
 import { FormsModule, NgForm } from '@angular/forms';
+import { Router } from '@angular/router';
 import { LucideAngularModule, X, FileText, Loader } from 'lucide-angular';
 import { AvaliacaoService } from '../../../services/avaliacao.service';
-
-const WEB_APP_URL = isDevMode()
-  ? 'http://localhost:4201'
-  : 'https://app.safetechpsicossocial.com.br';
 
 @Component({
   selector: 'app-avaliacao-modal',
@@ -96,6 +93,7 @@ export class AvaliacaoModalComponent {
   readonly Loader = Loader;
 
   readonly service = inject(AvaliacaoService);
+  private readonly router = inject(Router);
   readonly carregando = signal(false);
 
   form = { nome: '', cpf: '', email: '', empresa: '' };
@@ -121,15 +119,15 @@ export class AvaliacaoModalComponent {
 
   gerar(f: NgForm): void {
     if (f.invalid) return;
-    this.carregando.set(true);
     this.service.setDados({ nome: this.form.nome, cpf: this.form.cpf, email: this.form.email, empresa: this.form.empresa });
     this.service.fecharModal();
 
-    const params = new URLSearchParams({
-      nome: this.form.nome,
-      email: this.form.email,
-      empresa: this.form.empresa,
+    this.router.navigate(['/questionario'], {
+      queryParams: {
+        nome: this.form.nome,
+        email: this.form.email,
+        empresa: this.form.empresa,
+      }
     });
-    window.location.href = `${WEB_APP_URL}/demo?${params.toString()}`;
   }
 }

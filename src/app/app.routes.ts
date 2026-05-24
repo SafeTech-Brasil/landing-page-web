@@ -9,5 +9,9 @@ export const routes: Routes = [
     {
         path: 'avaliacao',
         loadComponent: () => import('./avaliacao-pdf/avaliacao-pdf.component').then(m => m.AvaliacaoPdfComponent)
+    },
+    {
+        path: 'questionario',
+        loadComponent: () => import('./questionario-demo/questionario-demo.component').then(m => m.QuestionarioDemoComponent)
     }
 ];
