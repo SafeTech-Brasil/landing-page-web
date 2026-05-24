@@ -5,12 +5,12 @@ import { IPerguntaDemo, IRespostaPossivelDemo } from '../interfaces/pergunta.int
   selector: 'app-pergunta-demo',
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
-    <div class="rounded-xl border border-border bg-card p-5 space-y-4">
+    <div class="rounded-xl border border-gray-200 bg-white p-5 space-y-4 shadow-sm">
       <div class="flex gap-3">
-        <span class="shrink-0 w-7 h-7 rounded-full bg-secondary/10 text-secondary text-sm font-bold flex items-center justify-center">
+        <span class="shrink-0 w-7 h-7 rounded-full bg-emerald-100 text-emerald-700 text-sm font-bold flex items-center justify-center">
           {{ pergunta().ordem }}
         </span>
-        <p class="text-sm font-medium leading-relaxed pt-0.5">{{ pergunta().descricao }}</p>
+        <p class="text-sm font-medium text-gray-800 leading-relaxed pt-0.5">{{ pergunta().descricao }}</p>
       </div>
 
       <div class="grid grid-cols-5 gap-2">
@@ -20,11 +20,11 @@ import { IPerguntaDemo, IRespostaPossivelDemo } from '../interfaces/pergunta.int
             (click)="selecionar(opcao.valor)"
             class="flex flex-col items-center gap-1 p-2 rounded-lg border text-xs font-medium transition-all"
             [class]="respostaSelecionada() === opcao.valor
-              ? 'border-secondary bg-secondary text-white'
-              : 'border-border bg-background hover:border-secondary/50 hover:bg-secondary/5 text-foreground'"
+              ? 'border-emerald-500 bg-emerald-500 text-white shadow-sm'
+              : 'border-gray-200 bg-gray-50 hover:border-emerald-400 hover:bg-emerald-50 text-gray-700'"
           >
             <span class="text-base font-bold">{{ opcao.valor }}</span>
-            <span class="text-center leading-tight opacity-80">{{ opcao.descricao }}</span>
+            <span class="text-center leading-tight">{{ opcao.descricao }}</span>
           </button>
         }
       </div>

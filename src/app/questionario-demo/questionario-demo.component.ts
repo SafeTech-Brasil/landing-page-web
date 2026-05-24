@@ -16,16 +16,16 @@ const PERGUNTAS_POR_PAGINA_MOBILE = 1;
   changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [LucideAngularModule, PerguntaDemoComponent],
   template: `
-    <div class="min-h-screen bg-background">
+    <div class="min-h-screen bg-gray-50">
       <!-- Header -->
-      <header class="border-b border-border bg-card/80 backdrop-blur sticky top-0 z-10">
+      <header class="border-b border-gray-200 bg-white shadow-sm sticky top-0 z-10">
         <div class="max-w-3xl mx-auto px-4 py-3 flex items-center justify-between">
           <div class="flex items-center gap-2">
-            <span class="text-lg font-bold text-secondary">PsicoSafe</span>
-            <span class="hidden sm:inline text-muted-foreground text-sm">| Avaliação Gratuita</span>
+            <span class="text-lg font-bold text-emerald-600">PsicoSafe</span>
+            <span class="hidden sm:inline text-gray-400 text-sm">| Avaliação Gratuita</span>
           </div>
           @if (step() === 'questionario') {
-            <span class="text-xs text-muted-foreground">
+            <span class="text-xs text-gray-500">
               {{ totalRespondidas() }}/{{ totalPerguntas }} respondidas
             </span>
           }
@@ -38,21 +38,21 @@ const PERGUNTAS_POR_PAGINA_MOBILE = 1;
         @if (step() === 'questionario') {
           <div class="space-y-6">
             <div class="space-y-1">
-              <h1 class="text-xl font-bold">Avaliação Psicossocial</h1>
+              <h1 class="text-xl font-bold text-gray-900">Avaliação Psicossocial</h1>
               @if (participante()) {
-                <p class="text-sm text-muted-foreground">Olá, <strong>{{ participante()!.nome }}</strong> — {{ participante()!.empresa }}</p>
+                <p class="text-sm text-gray-500">Olá, <strong class="text-gray-700">{{ participante()!.nome }}</strong> — {{ participante()!.empresa }}</p>
               }
             </div>
 
             <!-- Progress bar -->
             <div class="space-y-1">
-              <div class="h-2 rounded-full bg-muted overflow-hidden">
+              <div class="h-2 rounded-full bg-gray-200 overflow-hidden">
                 <div
-                  class="h-full bg-secondary rounded-full transition-all duration-300"
+                  class="h-full bg-emerald-500 rounded-full transition-all duration-300"
                   [style.width.%]="progressoPct()"
                 ></div>
               </div>
-              <p class="text-xs text-muted-foreground text-right">Página {{ paginaAtual() + 1 }} de {{ totalPaginas() }}</p>
+              <p class="text-xs text-gray-400 text-right">Página {{ paginaAtual() + 1 }} de {{ totalPaginas() }}</p>
             </div>
 
             <!-- Perguntas da página -->
@@ -73,7 +73,7 @@ const PERGUNTAS_POR_PAGINA_MOBILE = 1;
                 type="button"
                 (click)="prevPagina()"
                 [disabled]="paginaAtual() === 0"
-                class="flex items-center gap-1.5 px-4 py-2 rounded-lg border border-border text-sm font-medium hover:bg-muted disabled:opacity-40 disabled:cursor-not-allowed transition-colors"
+                class="flex items-center gap-1.5 px-4 py-2 rounded-lg border border-gray-200 bg-white text-gray-700 text-sm font-medium hover:bg-gray-50 disabled:opacity-40 disabled:cursor-not-allowed transition-colors"
               >
                 <lucide-icon [img]="ChevronLeft" class="h-4 w-4" />
                 Anterior
@@ -84,7 +84,7 @@ const PERGUNTAS_POR_PAGINA_MOBILE = 1;
                   type="button"
                   (click)="nextPagina()"
                   [disabled]="!paginaDaPageRespondida()"
-                  class="flex items-center gap-1.5 px-4 py-2 rounded-lg bg-secondary text-white text-sm font-medium hover:bg-secondary/90 disabled:opacity-40 disabled:cursor-not-allowed transition-colors"
+                  class="flex items-center gap-1.5 px-4 py-2 rounded-lg bg-emerald-500 text-white text-sm font-medium hover:bg-emerald-600 disabled:opacity-40 disabled:cursor-not-allowed transition-colors"
                 >
                   Próxima
                   <lucide-icon [img]="ChevronRight" class="h-4 w-4" />
@@ -94,7 +94,7 @@ const PERGUNTAS_POR_PAGINA_MOBILE = 1;
                   type="button"
                   (click)="finalizar()"
                   [disabled]="!todasRespondidas()"
-                  class="flex items-center gap-1.5 px-4 py-2 rounded-lg bg-secondary text-white text-sm font-medium hover:bg-secondary/90 disabled:opacity-40 disabled:cursor-not-allowed transition-colors"
+                  class="flex items-center gap-1.5 px-4 py-2 rounded-lg bg-emerald-500 text-white text-sm font-medium hover:bg-emerald-600 disabled:opacity-40 disabled:cursor-not-allowed transition-colors"
                 >
                   <lucide-icon [img]="CheckCircle" class="h-4 w-4" />
                   Finalizar e Gerar Relatório
@@ -107,12 +107,12 @@ const PERGUNTAS_POR_PAGINA_MOBILE = 1;
         <!-- STEP: Gerando relatório -->
         @if (step() === 'gerando') {
           <div class="flex flex-col items-center justify-center min-h-[60vh] space-y-6 text-center">
-            <div class="w-16 h-16 rounded-full bg-secondary/10 flex items-center justify-center">
-              <lucide-icon [img]="Loader2" class="h-8 w-8 text-secondary animate-spin" />
+            <div class="w-16 h-16 rounded-full bg-emerald-100 flex items-center justify-center">
+              <lucide-icon [img]="Loader2" class="h-8 w-8 text-emerald-600 animate-spin" />
             </div>
             <div class="space-y-2">
-              <h2 class="text-xl font-bold">Gerando seu relatório…</h2>
-              <p class="text-sm text-muted-foreground max-w-sm">
+              <h2 class="text-xl font-bold text-gray-900">Gerando seu relatório…</h2>
+              <p class="text-sm text-gray-500 max-w-sm">
                 Estamos analisando suas respostas e preparando um relatório personalizado com a avaliação psicossocial.
               </p>
             </div>
@@ -126,8 +126,8 @@ const PERGUNTAS_POR_PAGINA_MOBILE = 1;
               <lucide-icon [img]="CheckCircle" class="h-8 w-8 text-green-600" />
             </div>
             <div class="space-y-2">
-              <h2 class="text-xl font-bold">Relatório pronto!</h2>
-              <p class="text-sm text-muted-foreground max-w-sm">
+              <h2 class="text-xl font-bold text-gray-900">Relatório pronto!</h2>
+              <p class="text-sm text-gray-500 max-w-sm">
                 Seu relatório de avaliação psicossocial foi gerado com sucesso.
               </p>
             </div>
@@ -136,15 +136,15 @@ const PERGUNTAS_POR_PAGINA_MOBILE = 1;
               <a
                 [href]="pdfUrl()"
                 [download]="nomeArquivoPdf()"
-                class="flex items-center gap-2 px-6 py-3 rounded-xl bg-secondary text-white font-semibold hover:bg-secondary/90 transition-colors"
+                class="flex items-center gap-2 px-6 py-3 rounded-xl bg-emerald-500 text-white font-semibold hover:bg-emerald-600 transition-colors"
               >
                 <lucide-icon [img]="Download" class="h-4 w-4" />
                 Baixar Relatório PDF
               </a>
               <a
-                href="https://psicosafe.com.br"
+                href="https://safetechpsicossocial.com.br"
                 target="_blank"
-                class="flex items-center gap-2 px-6 py-3 rounded-xl border border-secondary text-secondary font-semibold hover:bg-secondary/5 transition-colors"
+                class="flex items-center gap-2 px-6 py-3 rounded-xl border border-emerald-500 text-emerald-600 font-semibold hover:bg-emerald-50 transition-colors"
               >
                 Conhecer o PsicoSafe
                 <lucide-icon [img]="ArrowRight" class="h-4 w-4" />
@@ -157,13 +157,13 @@ const PERGUNTAS_POR_PAGINA_MOBILE = 1;
         @if (step() === 'erro') {
           <div class="flex flex-col items-center justify-center min-h-[60vh] space-y-6 text-center">
             <div class="space-y-2">
-              <h2 class="text-xl font-bold text-destructive">Erro ao gerar relatório</h2>
-              <p class="text-sm text-muted-foreground max-w-sm">{{ erroMsg() }}</p>
+              <h2 class="text-xl font-bold text-red-600">Erro ao gerar relatório</h2>
+              <p class="text-sm text-gray-500 max-w-sm">{{ erroMsg() }}</p>
             </div>
             <button
               type="button"
               (click)="step.set('questionario')"
-              class="px-4 py-2 rounded-lg border border-border text-sm font-medium hover:bg-muted transition-colors"
+              class="px-4 py-2 rounded-lg border border-gray-200 bg-white text-gray-700 text-sm font-medium hover:bg-gray-50 transition-colors"
             >
               Tentar novamente
             </button>

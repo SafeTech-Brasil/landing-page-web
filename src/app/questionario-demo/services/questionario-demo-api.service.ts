@@ -5,7 +5,7 @@ import { IRespostaDemo } from '../interfaces/pergunta.interface';
 
 const API_URL = isDevMode()
   ? 'http://localhost:8080'
-  : 'https://api.psicosafe.com.br';
+  : 'https://api.safetechpsicossocial.com.br';
 
 export interface DemoRelatorioRequest {
   nome: string;
