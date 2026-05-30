@@ -267,6 +267,13 @@ type Step = 'dados-empresa' | 'metodo' | 'carregando-pix' | 'pix' | 'cartao' | '
                 (pago)="onPago()"
                 (erro)="onErro($event)"
               />
+              <div class="mt-4 pt-4 border-t border-border/60 text-center">
+                <button type="button" (click)="selecionarCartao()"
+                  class="inline-flex items-center gap-1.5 text-sm text-muted-foreground hover:text-foreground transition-colors underline-offset-2 hover:underline">
+                  <lucide-icon [img]="CreditCard" class="h-4 w-4" />
+                  Prefiro pagar com cartão de crédito
+                </button>
+              </div>
             }
 
             <!-- ══════════ STEP: CARTÃO ══════════ -->
@@ -481,12 +488,14 @@ export class PropostaModalComponent {
   }
 
   canGoBack(): boolean {
-    return this.step() === 'metodo' || this.step() === 'cartao';
+    return this.step() === 'cartao';
   }
 
   voltar(): void {
-    if (this.step() === 'metodo') this.step.set('dados-empresa');
-    else if (this.step() === 'cartao') this.step.set('metodo');
+    if (this.step() === 'cartao') {
+      if (this.pixData()) this.step.set('pix');
+      else this.step.set('metodo');
+    }
   }
 
   fechar(): void {
@@ -547,7 +556,17 @@ export class PropostaModalComponent {
           next: (res) => {
             this.carregandoEmpresa.set(false);
             this.propostaId.set(res.id);
-            this.step.set('metodo');
+            if (res.pixQrCodeBase64 && res.pixCodigoCopia) {
+              this.pixData.set({
+                paymentId: res.id,
+                qrCodeBase64: res.pixQrCodeBase64,
+                codigoCopia: res.pixCodigoCopia,
+                expiracao: res.pixExpiracao ?? '',
+              });
+              this.step.set('pix');
+            } else {
+              this.step.set('metodo');
+            }
             this.saveCache();
           },
           error: (err) => {
@@ -603,11 +622,15 @@ export class PropostaModalComponent {
   }
 
   saveCache(): void {
-    const draft = {
+    const s = this.step();
+    const draft: Record<string, unknown> = {
       formEmpresa: { ...this.formEmpresa },
       propostaId: this.propostaId(),
-      step: this.step() === 'metodo' ? 'metodo' : 'dados-empresa',
+      step: (s === 'pix' || s === 'metodo') ? s : 'dados-empresa',
     };
+    if (s === 'pix' && this.pixData()) {
+      draft['pixData'] = this.pixData();
+    }
     localStorage.setItem(this.CACHE_KEY, JSON.stringify(draft));
   }
 
@@ -619,9 +642,14 @@ export class PropostaModalComponent {
       if (draft.formEmpresa) {
         this.formEmpresa = { ...this.formEmpresa, ...draft.formEmpresa };
       }
-      if (draft.propostaId && draft.step === 'metodo') {
+      if (draft.propostaId) {
         this.propostaId.set(draft.propostaId);
-        this.step.set('metodo');
+        if (draft.step === 'pix' && draft.pixData) {
+          this.pixData.set(draft.pixData);
+          this.step.set('pix');
+        } else if (draft.step === 'metodo') {
+          this.step.set('metodo');
+        }
       }
       this.cdr.markForCheck();
     } catch { /* ignore corrupt data */ }

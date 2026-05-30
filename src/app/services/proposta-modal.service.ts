@@ -28,6 +28,9 @@ export interface PropostaResponse {
   id: string;
   status: string;
   mensagem: string;
+  pixQrCodeBase64: string | null;
+  pixCodigoCopia: string | null;
+  pixExpiracao: string | null;
 }
 
 export interface PagamentoPIXResponse {
