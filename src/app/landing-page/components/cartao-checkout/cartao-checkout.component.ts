@@ -61,12 +61,16 @@ interface InstallmentOption {
             [(ngModel)]="form.numeroCartao"
             (input)="onCardInput($event)"
             required
+            minlength="19"
             placeholder="0000 0000 0000 0000"
             maxlength="19"
             autocomplete="cc-number"
-            class="w-full h-10 rounded-md border border-input bg-background px-3 py-2 text-sm font-mono focus:outline-none focus:ring-2 focus:ring-ring"
-            [class.border-destructive]="f.submitted && f.controls['numero']?.invalid"
+            class="w-full h-10 rounded-md border bg-background px-3 py-2 text-sm font-mono focus:outline-none focus:ring-2 focus:ring-ring transition-colors"
+            [class]="f.submitted && f.controls['numero']?.invalid ? 'border-red-400 focus:ring-red-200' : 'border-input'"
           />
+          @if (f.submitted && f.controls['numero']?.invalid) {
+            <p class="text-xs text-red-500 mt-1">Número do cartão inválido (16 dígitos)</p>
+          }
         </div>
 
         <!-- Nome no cartão -->
@@ -77,11 +81,16 @@ interface InstallmentOption {
             type="text"
             [(ngModel)]="form.nomeTitular"
             required
+            minlength="3"
+            maxlength="100"
             placeholder="Como aparece no cartão"
             autocomplete="cc-name"
-            class="w-full h-10 rounded-md border border-input bg-background px-3 py-2 text-sm uppercase focus:outline-none focus:ring-2 focus:ring-ring"
-            [class.border-destructive]="f.submitted && f.controls['nome']?.invalid"
+            class="w-full h-10 rounded-md border bg-background px-3 py-2 text-sm uppercase focus:outline-none focus:ring-2 focus:ring-ring transition-colors"
+            [class]="f.submitted && f.controls['nome']?.invalid ? 'border-red-400 focus:ring-red-200' : 'border-input'"
           />
+          @if (f.submitted && f.controls['nome']?.invalid) {
+            <p class="text-xs text-red-500 mt-1">Nome do titular é obrigatório</p>
+          }
         </div>
 
         <!-- Validade + CCV -->
@@ -96,11 +105,12 @@ interface InstallmentOption {
                 [(ngModel)]="form.mesValidade"
                 (input)="onMesInput($event)"
                 required
+                minlength="2"
                 placeholder="MM"
                 maxlength="2"
                 autocomplete="cc-exp-month"
-                class="w-full h-10 rounded-md border border-input bg-background px-3 py-2 text-sm text-center font-mono focus:outline-none focus:ring-2 focus:ring-ring"
-                [class.border-destructive]="f.submitted && f.controls['mes']?.invalid"
+                class="w-full h-10 rounded-md border bg-background px-3 py-2 text-sm text-center font-mono focus:outline-none focus:ring-2 focus:ring-ring transition-colors"
+                [class]="f.submitted && f.controls['mes']?.invalid ? 'border-red-400 focus:ring-red-200' : 'border-input'"
               />
               <span class="flex items-center text-muted-foreground font-bold">/</span>
               <input
@@ -111,13 +121,17 @@ interface InstallmentOption {
                 [(ngModel)]="form.anoValidade"
                 (input)="onAnoInput($event)"
                 required
+                minlength="4"
                 placeholder="AAAA"
                 maxlength="4"
                 autocomplete="cc-exp-year"
-                class="w-full h-10 rounded-md border border-input bg-background px-3 py-2 text-sm text-center font-mono focus:outline-none focus:ring-2 focus:ring-ring"
-                [class.border-destructive]="f.submitted && f.controls['ano']?.invalid"
+                class="w-full h-10 rounded-md border bg-background px-3 py-2 text-sm text-center font-mono focus:outline-none focus:ring-2 focus:ring-ring transition-colors"
+                [class]="f.submitted && f.controls['ano']?.invalid ? 'border-red-400 focus:ring-red-200' : 'border-input'"
               />
             </div>
+            @if (f.submitted && (f.controls['mes']?.invalid || f.controls['ano']?.invalid)) {
+              <p class="text-xs text-red-500 mt-1">Validade inválida</p>
+            }
           </div>
           <div>
             <label class="block text-sm font-medium mb-1">CCV</label>
@@ -128,12 +142,16 @@ interface InstallmentOption {
               [(ngModel)]="form.ccv"
               (input)="onCcvInput($event)"
               required
+              [minlength]="isAmex() ? 4 : 3"
               [placeholder]="isAmex() ? '0000' : '000'"
               [maxlength]="isAmex() ? 4 : 3"
               autocomplete="cc-csc"
-              class="w-full h-10 rounded-md border border-input bg-background px-3 py-2 text-sm text-center font-mono focus:outline-none focus:ring-2 focus:ring-ring"
-              [class.border-destructive]="f.submitted && f.controls['ccv']?.invalid"
+              class="w-full h-10 rounded-md border bg-background px-3 py-2 text-sm text-center font-mono focus:outline-none focus:ring-2 focus:ring-ring transition-colors"
+              [class]="f.submitted && f.controls['ccv']?.invalid ? 'border-red-400 focus:ring-red-200' : 'border-input'"
             />
+            @if (f.submitted && f.controls['ccv']?.invalid) {
+              <p class="text-xs text-red-500 mt-1">CCV inválido</p>
+            }
           </div>
         </div>
 
@@ -150,11 +168,15 @@ interface InstallmentOption {
             [(ngModel)]="form.cpfTitular"
             (input)="onCpfInput($event)"
             required
+            minlength="14"
             placeholder="000.000.000-00"
             maxlength="14"
-            class="w-full h-10 rounded-md border border-input bg-background px-3 py-2 text-sm font-mono focus:outline-none focus:ring-2 focus:ring-ring"
-            [class.border-destructive]="f.submitted && f.controls['cpf']?.invalid"
+            class="w-full h-10 rounded-md border bg-background px-3 py-2 text-sm font-mono focus:outline-none focus:ring-2 focus:ring-ring transition-colors"
+            [class]="f.submitted && f.controls['cpf']?.invalid ? 'border-red-400 focus:ring-red-200' : 'border-input'"
           />
+          @if (f.submitted && f.controls['cpf']?.invalid) {
+            <p class="text-xs text-red-500 mt-1">CPF inválido (informe os 11 dígitos)</p>
+          }
         </div>
 
         <!-- CEP + Número -->
@@ -168,11 +190,15 @@ interface InstallmentOption {
               [(ngModel)]="form.cep"
               (input)="onCepInput($event)"
               required
+              minlength="9"
               placeholder="00000-000"
               maxlength="9"
-              class="w-full h-10 rounded-md border border-input bg-background px-3 py-2 text-sm font-mono focus:outline-none focus:ring-2 focus:ring-ring"
-              [class.border-destructive]="f.submitted && f.controls['cep']?.invalid"
+              class="w-full h-10 rounded-md border bg-background px-3 py-2 text-sm font-mono focus:outline-none focus:ring-2 focus:ring-ring transition-colors"
+              [class]="f.submitted && f.controls['cep']?.invalid ? 'border-red-400 focus:ring-red-200' : 'border-input'"
             />
+            @if (f.submitted && f.controls['cep']?.invalid) {
+              <p class="text-xs text-red-500 mt-1">CEP inválido</p>
+            }
           </div>
           <div>
             <label class="block text-sm font-medium mb-1">Número</label>
@@ -181,10 +207,14 @@ interface InstallmentOption {
               type="text"
               [(ngModel)]="form.numeroEndereco"
               required
+              maxlength="20"
               placeholder="123"
-              class="w-full h-10 rounded-md border border-input bg-background px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-ring"
-              [class.border-destructive]="f.submitted && f.controls['numero_end']?.invalid"
+              class="w-full h-10 rounded-md border bg-background px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-ring transition-colors"
+              [class]="f.submitted && f.controls['numero_end']?.invalid ? 'border-red-400 focus:ring-red-200' : 'border-input'"
             />
+            @if (f.submitted && f.controls['numero_end']?.invalid) {
+              <p class="text-xs text-red-500 mt-1">Número obrigatório</p>
+            }
           </div>
         </div>
 

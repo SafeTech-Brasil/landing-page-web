@@ -136,7 +136,7 @@ type Step = 'dados-empresa' | 'metodo' | 'carregando-pix' | 'pix' | 'cartao' | '
                   <div>
                     <label class="block text-xs font-semibold uppercase tracking-wide text-muted-foreground mb-1.5">Razão Social</label>
                     <input name="razao" type="text" [(ngModel)]="formEmpresa.razaoSocial"
-                      (ngModelChange)="saveCache()" required
+                      (ngModelChange)="saveCache()" required maxlength="200"
                       placeholder="Nome conforme CNPJ"
                       class="w-full h-11 rounded-lg border bg-background px-3 text-sm transition-colors focus:outline-none focus:ring-2"
                       [class]="f.submitted && f.controls['razao']?.invalid
@@ -158,7 +158,7 @@ type Step = 'dados-empresa' | 'metodo' | 'carregando-pix' | 'pix' | 'cartao' | '
                     <div>
                       <label class="block text-xs font-semibold uppercase tracking-wide text-muted-foreground mb-1.5">E-mail</label>
                       <input name="email" type="email" [(ngModel)]="formEmpresa.contatoEmail"
-                        (ngModelChange)="saveCache()" required email
+                        (ngModelChange)="saveCache()" required email maxlength="150"
                         placeholder="admin@empresa.com"
                         class="w-full h-11 rounded-lg border bg-background px-3 text-sm transition-colors focus:outline-none focus:ring-2"
                         [class]="f.submitted && f.controls['email']?.invalid
