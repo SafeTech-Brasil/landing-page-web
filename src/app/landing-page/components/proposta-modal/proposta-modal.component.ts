@@ -7,7 +7,7 @@ import {
   ChangeDetectorRef,
 } from '@angular/core';
 import { FormsModule, NgForm } from '@angular/forms';
-import { LucideAngularModule, X, CheckCircle, Loader, AlertCircle, Smartphone, CreditCard, ChevronLeft, Mail, Phone, Settings, Rocket, PartyPopper } from 'lucide-angular';
+import { LucideAngularModule, X, CheckCircle, Loader, AlertCircle, Smartphone, CreditCard, ChevronLeft, ChevronRight, Mail, Phone, Settings, Rocket, PartyPopper, Shield } from 'lucide-angular';
 import {
   PropostaModalService,
   PropostaRequest,
@@ -28,7 +28,7 @@ type Step = 'dados-empresa' | 'metodo' | 'carregando-pix' | 'pix' | 'cartao' | '
     @if (modalService.isOpen()) {
       <!-- Backdrop -->
       <div
-        class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm"
+        class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/70 backdrop-blur-sm"
         (click)="onBackdropClick($event)"
         role="dialog"
         aria-modal="true"
@@ -36,160 +36,228 @@ type Step = 'dados-empresa' | 'metodo' | 'carregando-pix' | 'pix' | 'cartao' | '
       >
         <!-- Card -->
         <div
-          class="relative w-full max-w-lg max-h-[92vh] overflow-y-auto rounded-2xl bg-card text-card-foreground shadow-2xl border border-border"
+          class="relative w-full max-w-lg max-h-[92vh] overflow-y-auto rounded-2xl bg-card text-card-foreground shadow-2xl"
           (click)="$event.stopPropagation()"
         >
-          <!-- Header fixo -->
-          <div class="sticky top-0 z-10 flex items-center justify-between p-5 pb-4 bg-card border-b border-border/60">
-            <div class="flex items-center gap-2">
-              @if (canGoBack()) {
-                <button type="button" (click)="voltar()" class="p-1.5 rounded-full hover:bg-muted transition-colors mr-1" aria-label="Voltar">
-                  <lucide-icon [img]="ChevronLeft" class="h-5 w-5 text-muted-foreground" />
-                </button>
-              }
-              <h2 id="modal-title" class="text-base font-bold">{{ stepTitle() }}</h2>
+
+          <!-- ── Header fixo com identidade da marca ── -->
+          <div class="sticky top-0 z-10 rounded-t-2xl overflow-hidden">
+            <!-- Barra de acento gradiente -->
+            <div class="h-1 bg-gradient-to-r from-[#1e3a5f] via-[#0ea5e9] to-[#10b981]"></div>
+            <!-- Área do header -->
+            <div class="flex items-center justify-between px-5 py-3.5 bg-card border-b border-border/60">
+              <div class="flex items-center gap-2.5">
+                @if (canGoBack()) {
+                  <button type="button" (click)="voltar()"
+                    class="p-1.5 rounded-full hover:bg-muted transition-colors"
+                    aria-label="Voltar">
+                    <lucide-icon [img]="ChevronLeft" class="h-4 w-4 text-muted-foreground" />
+                  </button>
+                }
+                <div>
+                  <p class="text-[10px] font-bold tracking-widest text-secondary uppercase leading-none">PsicoSafe</p>
+                  <h2 id="modal-title" class="text-sm font-bold leading-snug mt-0.5">{{ stepTitle() }}</h2>
+                </div>
+              </div>
+              <button type="button" (click)="fechar()"
+                class="p-1.5 rounded-full hover:bg-muted transition-colors"
+                aria-label="Fechar">
+                <lucide-icon [img]="X" class="h-4 w-4 text-muted-foreground" />
+              </button>
             </div>
-            <button type="button" (click)="fechar()" class="p-1.5 rounded-full hover:bg-muted transition-colors" aria-label="Fechar">
-              <lucide-icon [img]="X" class="h-5 w-5 text-muted-foreground" />
-            </button>
           </div>
 
           <div class="p-5 sm:p-6">
 
-            <!-- Indicador de steps (exceto sucesso/erro) -->
-            @if (step() !== 'sucesso' && step() !== 'erro') {
-              <div class="flex items-center gap-1.5 mb-5">
-                @for (s of stepIndicators; track s.id) {
-                  <div class="flex items-center gap-1.5 flex-1">
-                    <div class="h-1.5 flex-1 rounded-full transition-all duration-300"
-                         [class]="isStepCompleted(s.id) ? 'bg-primary' : isStepActive(s.id) ? 'bg-primary/40' : 'bg-muted'"></div>
+            <!-- ── Indicador de progresso (exceto sucesso/erro/loading) ── -->
+            @if (step() !== 'sucesso' && step() !== 'erro' && step() !== 'carregando-pix') {
+              <div class="flex items-start mb-5">
+                @for (s of stepIndicators; track s.id; let i = $index; let last = $last) {
+                  <div class="flex flex-col items-center">
+                    <div
+                      class="w-7 h-7 rounded-full flex items-center justify-center text-xs font-bold transition-all duration-300 flex-shrink-0"
+                      [class]="isStepCompleted(s.id)
+                        ? 'bg-secondary text-white shadow-sm'
+                        : isStepActive(s.id)
+                          ? 'bg-primary text-white shadow-sm'
+                          : 'bg-muted text-muted-foreground'">
+                      {{ i + 1 }}
+                    </div>
+                    <span class="text-[10px] font-medium mt-1 whitespace-nowrap"
+                      [class]="isStepActive(s.id) ? 'text-primary font-semibold' : isStepCompleted(s.id) ? 'text-secondary' : 'text-muted-foreground'">
+                      {{ s.label }}
+                    </span>
                   </div>
+                  @if (!last) {
+                    <div class="flex-1 h-px mt-3.5 mx-2 transition-all duration-300"
+                      [class]="isStepCompleted(s.id) ? 'bg-secondary' : 'bg-border'">
+                    </div>
+                  }
                 }
               </div>
             }
 
-            <!-- ============ STEP: DADOS DA EMPRESA ============ -->
+            <!-- ══════════ STEP: DADOS DA EMPRESA ══════════ -->
             @if (step() === 'dados-empresa') {
               <div class="space-y-4">
-                <!-- Resumo do plano -->
-                <div class="rounded-xl border border-primary/20 bg-primary/5 p-4 space-y-1.5">
-                  <div class="flex justify-between text-sm">
-                    <span class="text-muted-foreground">Plano</span>
-                    <span class="font-semibold text-secondary">{{ ctx()?.nomePlano }}</span>
+
+                <!-- Card do plano – cabeçalho navy + grid de detalhes -->
+                <div class="rounded-xl overflow-hidden border border-primary/20 shadow-sm">
+                  <div class="bg-gradient-to-r from-[#1e3a5f] to-[#1e4d80] px-4 py-3 flex items-center justify-between">
+                    <div>
+                      <p class="text-[10px] font-semibold uppercase tracking-widest text-white/60">Plano selecionado</p>
+                      <p class="text-base font-bold text-white leading-tight mt-0.5">{{ ctx()?.nomePlano }}</p>
+                    </div>
+                    <p class="text-xl font-bold text-secondary">{{ formatBRL(ctx()?.valorTotal ?? 0) }}</p>
                   </div>
-                  <div class="flex justify-between text-sm">
-                    <span class="text-muted-foreground">Colaboradores</span>
-                    <span class="font-medium">{{ ctx()?.quantidadeColaboradores }}</span>
-                  </div>
-                  <div class="flex justify-between items-center pt-1 border-t border-primary/10">
-                    <span class="text-muted-foreground text-sm">Total</span>
-                    <span class="text-xl font-bold">{{ formatBRL(ctx()?.valorTotal ?? 0) }}</span>
+                  <div class="bg-primary/5 px-4 py-2.5 flex items-center gap-3 text-xs text-muted-foreground divide-x divide-border/60">
+                    <span class="pr-3">
+                      <span class="font-semibold text-foreground">{{ ctx()?.quantidadeColaboradores }}</span> colaboradores
+                    </span>
+                    <span class="pl-3">
+                      {{ ctx()?.tipoContratacao === 'PONTUAL' ? 'Contratação Avulsa' : 'Assinatura Mensal' }}
+                    </span>
                   </div>
                 </div>
 
                 <form #f="ngForm" (ngSubmit)="enviarDadosEmpresa(f)" class="space-y-3" novalidate>
+                  <!-- CNPJ -->
                   <div>
-                    <label class="block text-sm font-medium mb-1">CNPJ</label>
+                    <label class="block text-xs font-semibold uppercase tracking-wide text-muted-foreground mb-1.5">CNPJ</label>
                     <input name="cnpj" type="text" inputmode="numeric" [(ngModel)]="formEmpresa.cnpj"
                       (input)="onCnpjInput($event)" required minlength="18" maxlength="18"
                       placeholder="00.000.000/0000-00"
-                      class="w-full h-10 rounded-md border border-input bg-background px-3 py-2 text-sm font-mono focus:outline-none focus:ring-2 focus:ring-ring"
-                      [class.border-destructive]="f.submitted && f.controls['cnpj']?.invalid" />
+                      class="w-full h-11 rounded-lg border bg-background px-3 text-sm font-mono transition-colors focus:outline-none focus:ring-2"
+                      [class]="f.submitted && f.controls['cnpj']?.invalid
+                        ? 'border-red-400 focus:ring-red-200'
+                        : 'border-input focus:border-primary focus:ring-primary/20'" />
                   </div>
+                  <!-- Razão Social -->
                   <div>
-                    <label class="block text-sm font-medium mb-1">Razão Social</label>
+                    <label class="block text-xs font-semibold uppercase tracking-wide text-muted-foreground mb-1.5">Razão Social</label>
                     <input name="razao" type="text" [(ngModel)]="formEmpresa.razaoSocial"
                       (ngModelChange)="saveCache()" required
                       placeholder="Nome conforme CNPJ"
-                      class="w-full h-10 rounded-md border border-input bg-background px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-ring"
-                      [class.border-destructive]="f.submitted && f.controls['razao']?.invalid" />
+                      class="w-full h-11 rounded-lg border bg-background px-3 text-sm transition-colors focus:outline-none focus:ring-2"
+                      [class]="f.submitted && f.controls['razao']?.invalid
+                        ? 'border-red-400 focus:ring-red-200'
+                        : 'border-input focus:border-primary focus:ring-primary/20'" />
                   </div>
-                  <div>
-                    <label class="block text-sm font-medium mb-1">Telefone</label>
-                    <input name="telefone" type="tel" [(ngModel)]="formEmpresa.contatoTelefone"
-                      (input)="onTelefoneInput($event)" required minlength="14"
-                      placeholder="(11) 99999-9999"
-                      class="w-full h-10 rounded-md border border-input bg-background px-3 py-2 text-sm font-mono focus:outline-none focus:ring-2 focus:ring-ring"
-                      [class.border-destructive]="f.submitted && f.controls['telefone']?.invalid" />
+                  <!-- Telefone + E-mail lado a lado -->
+                  <div class="grid grid-cols-2 gap-3">
+                    <div>
+                      <label class="block text-xs font-semibold uppercase tracking-wide text-muted-foreground mb-1.5">Telefone</label>
+                      <input name="telefone" type="tel" [(ngModel)]="formEmpresa.contatoTelefone"
+                        (input)="onTelefoneInput($event)" required minlength="14"
+                        placeholder="(11) 99999-9999"
+                        class="w-full h-11 rounded-lg border bg-background px-3 text-sm font-mono transition-colors focus:outline-none focus:ring-2"
+                        [class]="f.submitted && f.controls['telefone']?.invalid
+                          ? 'border-red-400 focus:ring-red-200'
+                          : 'border-input focus:border-primary focus:ring-primary/20'" />
+                    </div>
+                    <div>
+                      <label class="block text-xs font-semibold uppercase tracking-wide text-muted-foreground mb-1.5">E-mail</label>
+                      <input name="email" type="email" [(ngModel)]="formEmpresa.contatoEmail"
+                        (ngModelChange)="saveCache()" required email
+                        placeholder="admin@empresa.com"
+                        class="w-full h-11 rounded-lg border bg-background px-3 text-sm transition-colors focus:outline-none focus:ring-2"
+                        [class]="f.submitted && f.controls['email']?.invalid
+                          ? 'border-red-400 focus:ring-red-200'
+                          : 'border-input focus:border-primary focus:ring-primary/20'" />
+                    </div>
                   </div>
-                  <div>
-                    <label class="block text-sm font-medium mb-1">E-mail do Administrador</label>
-                    <input name="email" type="email" [(ngModel)]="formEmpresa.contatoEmail"
-                      (ngModelChange)="saveCache()" required email
-                      placeholder="admin@empresa.com.br"
-                      class="w-full h-10 rounded-md border border-input bg-background px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-ring"
-                      [class.border-destructive]="f.submitted && f.controls['email']?.invalid" />
-                  </div>
+
                   <button type="submit" [disabled]="carregandoEmpresa()"
-                    class="btn-secondary w-full min-h-[48px] font-semibold flex items-center justify-center gap-2 disabled:opacity-60 mt-2">
+                    class="btn-secondary w-full min-h-[48px] font-semibold flex items-center justify-center gap-2 disabled:opacity-60 mt-1">
                     @if (carregandoEmpresa()) {
                       <lucide-icon [img]="Loader" class="h-4 w-4 animate-spin" />
                       Aguarde...
                     } @else {
                       Continuar para pagamento
+                      <lucide-icon [img]="ChevronRight" class="h-4 w-4" />
                     }
                   </button>
-                  <p class="text-[11px] text-muted-foreground text-center leading-relaxed">
-                    Este site é protegido pelo reCAPTCHA e se aplicam a
-                    <a href="https://policies.google.com/privacy" target="_blank" rel="noopener" class="underline hover:text-foreground">Política de Privacidade</a>
-                    e os
-                    <a href="https://policies.google.com/terms" target="_blank" rel="noopener" class="underline hover:text-foreground">Termos de Serviço</a>
-                    do Google.
+
+                  <p class="text-[10px] text-muted-foreground text-center leading-relaxed">
+                    Protegido por reCAPTCHA ·
+                    <a href="https://policies.google.com/privacy" target="_blank" rel="noopener" class="underline hover:text-foreground">Privacidade</a>
+                    ·
+                    <a href="https://policies.google.com/terms" target="_blank" rel="noopener" class="underline hover:text-foreground">Termos</a>
                   </p>
                 </form>
               </div>
             }
 
-            <!-- ============ STEP: MÉTODO DE PAGAMENTO ============ -->
+            <!-- ══════════ STEP: MÉTODO DE PAGAMENTO ══════════ -->
             @if (step() === 'metodo') {
-              <div class="space-y-4">
-                <p class="text-sm text-muted-foreground text-center">
-                  Escolha como deseja pagar <strong>{{ formatBRL(ctx()?.valorTotal ?? 0) }}</strong>
-                </p>
+              <div class="space-y-3">
+
+                <!-- Valor destacado -->
+                <div class="text-center py-2">
+                  <p class="text-xs font-semibold uppercase tracking-widest text-muted-foreground">Valor a pagar</p>
+                  <p class="text-3xl font-bold text-foreground mt-1">{{ formatBRL(ctx()?.valorTotal ?? 0) }}</p>
+                </div>
 
                 <!-- PIX -->
                 <button type="button" (click)="selecionarPix()"
-                  class="w-full flex items-start gap-4 p-5 rounded-2xl border-2 hover:border-primary transition-all text-left group">
-                  <div class="flex-shrink-0 w-12 h-12 rounded-xl bg-teal-100 dark:bg-teal-900/30 flex items-center justify-center">
-                    <lucide-icon [img]="Smartphone" class="h-6 w-6 text-teal-600 dark:text-teal-400" />
+                  class="w-full flex items-center gap-4 p-4 rounded-xl border-2 border-border hover:border-teal-400 hover:bg-teal-50 dark:hover:bg-teal-900/20 transition-all text-left group">
+                  <div class="w-12 h-12 rounded-xl bg-gradient-to-br from-teal-500 to-emerald-600 flex items-center justify-center flex-shrink-0 shadow-md">
+                    <lucide-icon [img]="Smartphone" class="h-6 w-6 text-white" />
                   </div>
                   <div class="flex-1 min-w-0">
-                    <p class="font-semibold">PIX</p>
-                    <p class="text-sm text-muted-foreground">Confirmação imediata. Qualquer banco ou carteira digital.</p>
-                    <span class="inline-flex mt-1.5 items-center rounded-full bg-teal-100 dark:bg-teal-900/30 px-2.5 py-0.5 text-xs font-medium text-teal-700 dark:text-teal-300">
-                      Mais rápido
-                    </span>
+                    <div class="flex items-center gap-2 flex-wrap">
+                      <p class="font-semibold">PIX</p>
+                      <span class="inline-flex items-center rounded-full bg-teal-100 dark:bg-teal-900/40 px-2 py-0.5 text-[10px] font-bold text-teal-700 dark:text-teal-300 uppercase tracking-wide">
+                        Mais rápido
+                      </span>
+                    </div>
+                    <p class="text-xs text-muted-foreground mt-0.5">Confirmação imediata · Qualquer banco ou carteira</p>
                   </div>
+                  <lucide-icon [img]="ChevronRight" class="h-5 w-5 text-muted-foreground group-hover:text-teal-500 transition-colors flex-shrink-0" />
                 </button>
 
                 <!-- Cartão de crédito -->
                 <button type="button" (click)="selecionarCartao()"
-                  class="w-full flex items-start gap-4 p-5 rounded-2xl border-2 hover:border-primary transition-all text-left group">
-                  <div class="flex-shrink-0 w-12 h-12 rounded-xl bg-blue-100 dark:bg-blue-900/30 flex items-center justify-center">
-                    <lucide-icon [img]="CreditCard" class="h-6 w-6 text-blue-600 dark:text-blue-400" />
+                  class="w-full flex items-center gap-4 p-4 rounded-xl border-2 border-border hover:border-blue-400 hover:bg-blue-50 dark:hover:bg-blue-900/20 transition-all text-left group">
+                  <div class="w-12 h-12 rounded-xl bg-gradient-to-br from-blue-500 to-indigo-600 flex items-center justify-center flex-shrink-0 shadow-md">
+                    <lucide-icon [img]="CreditCard" class="h-6 w-6 text-white" />
                   </div>
                   <div class="flex-1 min-w-0">
-                    <p class="font-semibold">Cartão de Crédito</p>
-                    <p class="text-sm text-muted-foreground">Visa, Mastercard, Elo, Amex e outros.</p>
-                    @if ((installmentCount()) > 1) {
-                      <span class="inline-flex mt-1.5 items-center rounded-full bg-blue-100 dark:bg-blue-900/30 px-2.5 py-0.5 text-xs font-medium text-blue-700 dark:text-blue-300">
-                        Parcelável em até {{ installmentCount() }}x sem juros
-                      </span>
-                    }
+                    <div class="flex items-center gap-2 flex-wrap">
+                      <p class="font-semibold">Cartão de Crédito</p>
+                      @if (installmentCount() > 1) {
+                        <span class="inline-flex items-center rounded-full bg-blue-100 dark:bg-blue-900/40 px-2 py-0.5 text-[10px] font-bold text-blue-700 dark:text-blue-300 uppercase tracking-wide">
+                          até {{ installmentCount() }}x sem juros
+                        </span>
+                      }
+                    </div>
+                    <p class="text-xs text-muted-foreground mt-0.5">Visa, Mastercard, Elo, Amex e outros</p>
                   </div>
+                  <lucide-icon [img]="ChevronRight" class="h-5 w-5 text-muted-foreground group-hover:text-blue-500 transition-colors flex-shrink-0" />
                 </button>
+
+                <!-- Nota de segurança -->
+                <div class="flex items-center justify-center gap-1.5 pt-1">
+                  <lucide-icon [img]="Shield" class="h-3.5 w-3.5 text-muted-foreground" />
+                  <p class="text-[11px] text-muted-foreground">Pagamento 100% seguro e criptografado</p>
+                </div>
               </div>
             }
 
-            <!-- ============ STEP: CARREGANDO PIX ============ -->
+            <!-- ══════════ STEP: CARREGANDO PIX ══════════ -->
             @if (step() === 'carregando-pix') {
-              <div class="flex flex-col items-center justify-center gap-4 py-10">
-                <lucide-icon [img]="Loader" class="h-10 w-10 text-primary animate-spin" />
-                <p class="text-muted-foreground text-sm">Gerando QR Code PIX...</p>
+              <div class="flex flex-col items-center justify-center gap-4 py-12">
+                <div class="w-16 h-16 rounded-2xl bg-teal-100 dark:bg-teal-900/30 flex items-center justify-center">
+                  <lucide-icon [img]="Loader" class="h-8 w-8 text-teal-600 dark:text-teal-400 animate-spin" />
+                </div>
+                <div class="text-center">
+                  <p class="font-semibold">Gerando QR Code PIX</p>
+                  <p class="text-sm text-muted-foreground mt-1">Aguarde um instante...</p>
+                </div>
               </div>
             }
 
-            <!-- ============ STEP: PIX ============ -->
+            <!-- ══════════ STEP: PIX ══════════ -->
             @if (step() === 'pix' && pixData()) {
               <app-pix-checkout
                 [propostaId]="propostaId()"
@@ -201,7 +269,7 @@ type Step = 'dados-empresa' | 'metodo' | 'carregando-pix' | 'pix' | 'cartao' | '
               />
             }
 
-            <!-- ============ STEP: CARTÃO ============ -->
+            <!-- ══════════ STEP: CARTÃO ══════════ -->
             @if (step() === 'cartao') {
               <app-cartao-checkout
                 [propostaId]="propostaId()"
@@ -211,143 +279,118 @@ type Step = 'dados-empresa' | 'metodo' | 'carregando-pix' | 'pix' | 'cartao' | '
               />
             }
 
-            <!-- ============ STEP: SUCESSO ============ -->
+            <!-- ══════════ STEP: SUCESSO ══════════ -->
             @if (step() === 'sucesso') {
-              <div class="space-y-6 pb-2">
+              <div class="space-y-5 pb-2">
 
-                <!-- Hero de sucesso -->
-                <div class="text-center space-y-3 pt-2">
+                <!-- Hero -->
+                <div class="text-center space-y-3 pt-1">
                   <div class="flex justify-center">
                     <div class="relative">
                       <div class="w-20 h-20 rounded-full bg-green-100 dark:bg-green-900/30 flex items-center justify-center">
                         <lucide-icon [img]="CheckCircle" class="h-10 w-10 text-green-600 dark:text-green-400" />
                       </div>
                       <div class="absolute -top-1 -right-1 w-7 h-7 rounded-full bg-yellow-100 dark:bg-yellow-900/40 flex items-center justify-center border-2 border-card">
-                        <lucide-icon [img]="PartyPopper" class="h-4 w-4 text-yellow-600 dark:text-yellow-400" />
+                        <lucide-icon [img]="PartyPopper" class="h-4 w-4 text-yellow-500" />
                       </div>
                     </div>
                   </div>
                   <div>
                     <h3 class="text-xl font-bold">Contratação realizada!</h3>
                     <p class="text-sm text-muted-foreground mt-1">
-                      Bem-vindo à Psicosafe, <strong class="text-foreground">{{ formEmpresa.razaoSocial }}</strong>
+                      Bem-vindo à PsicoSafe, <strong class="text-foreground">{{ formEmpresa.razaoSocial }}</strong>
                     </p>
                   </div>
                 </div>
 
                 <!-- Resumo contratado -->
-                <div class="rounded-xl border border-green-200 dark:border-green-800 bg-green-50 dark:bg-green-900/10 px-4 py-3 flex items-center justify-between gap-4 text-sm">
-                  <div>
-                    <p class="font-semibold text-green-800 dark:text-green-300">{{ ctx()?.nomePlano }}</p>
-                    <p class="text-green-700 dark:text-green-400 text-xs mt-0.5">
-                      {{ ctx()?.quantidadeColaboradores }} colaboradores · {{ ctx()?.tipoContratacao === 'PONTUAL' ? 'Avulso' : 'Mensal' }}
-                    </p>
+                <div class="rounded-xl overflow-hidden border border-green-200 dark:border-green-800 shadow-sm">
+                  <div class="bg-gradient-to-r from-green-600 to-emerald-500 px-4 py-2.5 flex items-center justify-between">
+                    <p class="font-semibold text-white text-sm">{{ ctx()?.nomePlano }}</p>
+                    <p class="font-bold text-white">{{ formatBRL(ctx()?.valorTotal ?? 0) }}</p>
                   </div>
-                  <span class="font-bold text-green-800 dark:text-green-300 whitespace-nowrap">
-                    {{ formatBRL(ctx()?.valorTotal ?? 0) }}
-                  </span>
+                  <div class="bg-green-50 dark:bg-green-900/10 px-4 py-2 text-xs text-green-700 dark:text-green-400">
+                    {{ ctx()?.quantidadeColaboradores }} colaboradores · {{ ctx()?.tipoContratacao === 'PONTUAL' ? 'Avulso' : 'Mensal' }}
+                  </div>
                 </div>
 
-                <!-- Timeline de próximos passos -->
+                <!-- Timeline -->
                 <div>
-                  <p class="text-xs font-semibold uppercase tracking-wider text-muted-foreground mb-3">O que acontece agora</p>
+                  <p class="text-[10px] font-bold uppercase tracking-widest text-muted-foreground mb-3">O que acontece agora</p>
                   <ol class="space-y-0">
-
-                    <!-- Passo 1 -->
-                    <li class="flex gap-4">
+                    <li class="flex gap-3">
                       <div class="flex flex-col items-center">
-                        <div class="w-9 h-9 rounded-full bg-primary/10 flex items-center justify-center flex-shrink-0">
-                          <lucide-icon [img]="Mail" class="h-4 w-4 text-primary" />
+                        <div class="w-8 h-8 rounded-full bg-primary/10 flex items-center justify-center flex-shrink-0">
+                          <lucide-icon [img]="Mail" class="h-3.5 w-3.5 text-primary" />
                         </div>
-                        <div class="w-px flex-1 bg-border mt-1 mb-1 min-h-[24px]"></div>
+                        <div class="w-px flex-1 bg-border mt-1 mb-1 min-h-[20px]"></div>
                       </div>
-                      <div class="pb-4 pt-1.5 min-w-0">
-                        <p class="text-sm font-semibold leading-tight">Confirmação por e-mail</p>
-                        <p class="text-xs text-muted-foreground mt-0.5 leading-relaxed">
-                          Um resumo da contratação foi enviado para
-                          <span class="font-medium text-foreground break-all">{{ formEmpresa.contatoEmail }}</span>.
+                      <div class="pb-3 pt-1 min-w-0">
+                        <p class="text-sm font-semibold">Confirmação por e-mail</p>
+                        <p class="text-xs text-muted-foreground mt-0.5">
+                          Resumo enviado para <span class="font-medium text-foreground break-all">{{ formEmpresa.contatoEmail }}</span>
                         </p>
                       </div>
                     </li>
-
-                    <!-- Passo 2 -->
-                    <li class="flex gap-4">
+                    <li class="flex gap-3">
                       <div class="flex flex-col items-center">
-                        <div class="w-9 h-9 rounded-full bg-primary/10 flex items-center justify-center flex-shrink-0">
-                          <lucide-icon [img]="Phone" class="h-4 w-4 text-primary" />
+                        <div class="w-8 h-8 rounded-full bg-primary/10 flex items-center justify-center flex-shrink-0">
+                          <lucide-icon [img]="Phone" class="h-3.5 w-3.5 text-primary" />
                         </div>
-                        <div class="w-px flex-1 bg-border mt-1 mb-1 min-h-[24px]"></div>
+                        <div class="w-px flex-1 bg-border mt-1 mb-1 min-h-[20px]"></div>
                       </div>
-                      <div class="pb-4 pt-1.5 min-w-0">
-                        <p class="text-sm font-semibold leading-tight">Nossa equipe entra em contato</p>
-                        <p class="text-xs text-muted-foreground mt-0.5 leading-relaxed">
-                          Em até <strong class="text-foreground">24 horas úteis</strong> um especialista
-                          liga ou envia mensagem para o número informado.
-                        </p>
+                      <div class="pb-3 pt-1 min-w-0">
+                        <p class="text-sm font-semibold">Nossa equipe entra em contato</p>
+                        <p class="text-xs text-muted-foreground mt-0.5">Em até <strong class="text-foreground">24 horas úteis</strong></p>
                       </div>
                     </li>
-
-                    <!-- Passo 3 -->
-                    <li class="flex gap-4">
+                    <li class="flex gap-3">
                       <div class="flex flex-col items-center">
-                        <div class="w-9 h-9 rounded-full bg-primary/10 flex items-center justify-center flex-shrink-0">
-                          <lucide-icon [img]="Settings" class="h-4 w-4 text-primary" />
+                        <div class="w-8 h-8 rounded-full bg-primary/10 flex items-center justify-center flex-shrink-0">
+                          <lucide-icon [img]="Settings" class="h-3.5 w-3.5 text-primary" />
                         </div>
-                        <div class="w-px flex-1 bg-border mt-1 mb-1 min-h-[24px]"></div>
+                        <div class="w-px flex-1 bg-border mt-1 mb-1 min-h-[20px]"></div>
                       </div>
-                      <div class="pb-4 pt-1.5 min-w-0">
-                        <p class="text-sm font-semibold leading-tight">Configuração do ambiente</p>
-                        <p class="text-xs text-muted-foreground mt-0.5 leading-relaxed">
-                          Configuramos a plataforma com os dados da sua empresa e cadastramos
-                          os primeiros acessos de administrador.
-                        </p>
+                      <div class="pb-3 pt-1 min-w-0">
+                        <p class="text-sm font-semibold">Configuração do ambiente</p>
+                        <p class="text-xs text-muted-foreground mt-0.5">Plataforma configurada com os dados da sua empresa</p>
                       </div>
                     </li>
-
-                    <!-- Passo 4 (sem linha abaixo) -->
-                    <li class="flex gap-4">
+                    <li class="flex gap-3">
                       <div class="flex flex-col items-center">
-                        <div class="w-9 h-9 rounded-full bg-secondary/20 flex items-center justify-center flex-shrink-0">
-                          <lucide-icon [img]="Rocket" class="h-4 w-4 text-secondary" />
+                        <div class="w-8 h-8 rounded-full bg-secondary/20 flex items-center justify-center flex-shrink-0">
+                          <lucide-icon [img]="Rocket" class="h-3.5 w-3.5 text-secondary" />
                         </div>
                       </div>
-                      <div class="pt-1.5 min-w-0">
-                        <p class="text-sm font-semibold leading-tight">Acesso liberado + onboarding</p>
-                        <p class="text-xs text-muted-foreground mt-0.5 leading-relaxed">
-                          Recebe as credenciais e uma sessão guiada para explorar todos os recursos
-                          da plataforma com nossa equipe.
-                        </p>
+                      <div class="pt-1 min-w-0">
+                        <p class="text-sm font-semibold">Acesso liberado + onboarding</p>
+                        <p class="text-xs text-muted-foreground mt-0.5">Credenciais e sessão guiada com nossa equipe</p>
                       </div>
                     </li>
-
                   </ol>
                 </div>
 
-                <!-- Rodapé -->
-                <div class="rounded-xl bg-muted/50 px-4 py-3 text-xs text-muted-foreground text-center leading-relaxed">
-                  Dúvidas? Fale conosco pelo e-mail
-                  <span class="font-medium text-foreground">contato&#64;safetechpsicossocial.com.br</span>
+                <div class="rounded-xl bg-muted/50 px-4 py-3 text-xs text-muted-foreground text-center">
+                  Dúvidas? <span class="font-medium text-foreground">contato&#64;safetechpsicossocial.com.br</span>
                 </div>
 
-                <button type="button" (click)="fechar()"
-                  class="btn-secondary w-full min-h-[48px] font-semibold">
+                <button type="button" (click)="fechar()" class="btn-secondary w-full min-h-[48px] font-semibold">
                   Entendido, até logo!
                 </button>
               </div>
             }
 
-            <!-- ============ STEP: ERRO ============ -->
+            <!-- ══════════ STEP: ERRO ══════════ -->
             @if (step() === 'erro') {
-              <div class="flex flex-col items-center text-center gap-5 py-6">
-                <div class="rounded-full bg-red-100 dark:bg-red-900/30 p-5">
-                  <lucide-icon [img]="AlertCircle" class="h-12 w-12 text-red-600 dark:text-red-400" />
+              <div class="flex flex-col items-center text-center gap-5 py-8">
+                <div class="w-20 h-20 rounded-2xl bg-red-100 dark:bg-red-900/30 flex items-center justify-center">
+                  <lucide-icon [img]="AlertCircle" class="h-10 w-10 text-red-600 dark:text-red-400" />
                 </div>
                 <div>
-                  <h3 class="text-xl font-bold mb-2">Algo deu errado</h3>
+                  <h3 class="text-xl font-bold mb-1">Algo deu errado</h3>
                   <p class="text-sm text-muted-foreground max-w-xs mx-auto">{{ erroMensagem() }}</p>
                 </div>
-                <button type="button" (click)="voltarParaMetodo()"
-                  class="btn-secondary px-10 min-h-[44px]">
+                <button type="button" (click)="voltarParaMetodo()" class="btn-secondary px-10 min-h-[44px]">
                   Tentar novamente
                 </button>
               </div>
@@ -367,11 +410,13 @@ export class PropostaModalComponent {
   readonly Smartphone = Smartphone;
   readonly CreditCard = CreditCard;
   readonly ChevronLeft = ChevronLeft;
+  readonly ChevronRight = ChevronRight;
   readonly Mail = Mail;
   readonly Phone = Phone;
   readonly Settings = Settings;
   readonly Rocket = Rocket;
   readonly PartyPopper = PartyPopper;
+  readonly Shield = Shield;
 
   readonly modalService = inject(PropostaModalService);
   readonly ctx = this.modalService.context;
