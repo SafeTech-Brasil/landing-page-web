@@ -3,6 +3,8 @@ import {
   ChangeDetectionStrategy,
   signal,
   inject,
+  effect,
+  ChangeDetectorRef,
 } from '@angular/core';
 import { FormsModule, NgForm } from '@angular/forms';
 import { LucideAngularModule, X, CheckCircle, Loader, AlertCircle, Smartphone, CreditCard, ChevronLeft, Mail, Phone, Settings, Rocket, PartyPopper } from 'lucide-angular';
@@ -96,7 +98,8 @@ type Step = 'dados-empresa' | 'metodo' | 'carregando-pix' | 'pix' | 'cartao' | '
                   </div>
                   <div>
                     <label class="block text-sm font-medium mb-1">Razão Social</label>
-                    <input name="razao" type="text" [(ngModel)]="formEmpresa.razaoSocial" required
+                    <input name="razao" type="text" [(ngModel)]="formEmpresa.razaoSocial"
+                      (ngModelChange)="saveCache()" required
                       placeholder="Nome conforme CNPJ"
                       class="w-full h-10 rounded-md border border-input bg-background px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-ring"
                       [class.border-destructive]="f.submitted && f.controls['razao']?.invalid" />
@@ -111,7 +114,8 @@ type Step = 'dados-empresa' | 'metodo' | 'carregando-pix' | 'pix' | 'cartao' | '
                   </div>
                   <div>
                     <label class="block text-sm font-medium mb-1">E-mail do Administrador</label>
-                    <input name="email" type="email" [(ngModel)]="formEmpresa.contatoEmail" required email
+                    <input name="email" type="email" [(ngModel)]="formEmpresa.contatoEmail"
+                      (ngModelChange)="saveCache()" required email
                       placeholder="admin@empresa.com.br"
                       class="w-full h-10 rounded-md border border-input bg-background px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-ring"
                       [class.border-destructive]="f.submitted && f.controls['email']?.invalid" />
@@ -371,6 +375,7 @@ export class PropostaModalComponent {
 
   readonly modalService = inject(PropostaModalService);
   readonly ctx = this.modalService.context;
+  readonly cdr = inject(ChangeDetectorRef);
 
   step = signal<Step>('dados-empresa');
   propostaId = signal('');
@@ -379,6 +384,16 @@ export class PropostaModalComponent {
   carregandoEmpresa = signal(false);
 
   formEmpresa = { cnpj: '', razaoSocial: '', contatoTelefone: '', contatoEmail: '' };
+
+  private readonly CACHE_KEY = 'psicosafe_proposta_rascunho';
+
+  constructor() {
+    effect(() => {
+      if (this.modalService.isOpen()) {
+        this.loadCache();
+      }
+    });
+  }
 
   readonly stepIndicators = [
     { id: 'dados-empresa', label: 'Empresa' },
@@ -446,6 +461,7 @@ export class PropostaModalComponent {
   }
 
   onPago(): void {
+    this.clearCache();
     this.step.set('sucesso');
   }
 
@@ -487,6 +503,7 @@ export class PropostaModalComponent {
             this.carregandoEmpresa.set(false);
             this.propostaId.set(res.id);
             this.step.set('metodo');
+            this.saveCache();
           },
           error: (err) => {
             this.carregandoEmpresa.set(false);
@@ -526,6 +543,7 @@ export class PropostaModalComponent {
     else if (v.length > 2) v = v.replace(/^(\d{2})(\d{0,3})/, '$1.$2');
     input.value = v;
     this.formEmpresa.cnpj = v;
+    this.saveCache();
   }
 
   onTelefoneInput(event: Event): void {
@@ -536,6 +554,36 @@ export class PropostaModalComponent {
     else if (v.length > 2) v = v.replace(/^(\d{2})(\d{0,5})/, '($1) $2');
     input.value = v;
     this.formEmpresa.contatoTelefone = v;
+    this.saveCache();
+  }
+
+  saveCache(): void {
+    const draft = {
+      formEmpresa: { ...this.formEmpresa },
+      propostaId: this.propostaId(),
+      step: this.step() === 'metodo' ? 'metodo' : 'dados-empresa',
+    };
+    localStorage.setItem(this.CACHE_KEY, JSON.stringify(draft));
+  }
+
+  private loadCache(): void {
+    try {
+      const raw = localStorage.getItem(this.CACHE_KEY);
+      if (!raw) return;
+      const draft = JSON.parse(raw);
+      if (draft.formEmpresa) {
+        this.formEmpresa = { ...this.formEmpresa, ...draft.formEmpresa };
+      }
+      if (draft.propostaId && draft.step === 'metodo') {
+        this.propostaId.set(draft.propostaId);
+        this.step.set('metodo');
+      }
+      this.cdr.markForCheck();
+    } catch { /* ignore corrupt data */ }
+  }
+
+  private clearCache(): void {
+    localStorage.removeItem(this.CACHE_KEY);
   }
 
   formatBRL(value: number): string {
